@@ -7,7 +7,7 @@
 #include "ofxTLCameraTrack.h"
 
 //tenuous
-#include "ofxExtras.h"
+#include "ofxLight.h"
 #include "ofxGenerative.h"
 
 /**
@@ -20,6 +20,17 @@
 
 //TODO: fading, info routing
 class CloudsRGBDCombinedRenderer;
+
+enum ofxViewType
+{
+    OFX_VIEW_TOP = 0,
+    OFX_VIEW_BOTTOM,
+    OFX_VIEW_FRONT,
+    OFX_VIEW_BACK,
+    OFX_VIEW_RIGHT,
+    OFX_VIEW_LEFT,
+    OFX_VIEW_3D
+};
 
 class CloudsVisualSystem {
   public:
