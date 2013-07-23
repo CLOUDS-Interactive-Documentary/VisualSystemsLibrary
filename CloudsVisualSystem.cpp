@@ -335,7 +335,8 @@ void CloudsVisualSystem::exit(ofEventArgs & args)
     }
     materials.clear();
     materialGuis.clear();
-    
+	
+	
 	delete cameraTrack;
     delete timeline;
 
@@ -1472,6 +1473,10 @@ void CloudsVisualSystem::resetTimeline()
 {
 	ofRemoveListener(timeline->events().bangFired, this, &CloudsVisualSystem::timelineBangEvent);
     timeline->reset();
+    cameraTrack->disable();
+	cameraTrack->lockCameraToTrack = false;
+	delete cameraTrack;
+	cameraTrack = NULL;
     timeline->setPageName(ofToUpper(getSystemName()));
     setupTimeline();
 }

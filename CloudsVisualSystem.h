@@ -18,7 +18,6 @@
  * methods for interacting with play time duration, on screen start and stop, and accessing CLOUDS global state
  */
 
-//TODO: fading, info routing
 class CloudsRGBDCombinedRenderer;
 
 enum ofxViewType
