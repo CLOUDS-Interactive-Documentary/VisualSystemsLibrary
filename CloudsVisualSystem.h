@@ -7,7 +7,7 @@
 #include "ofxTLCameraTrack.h"
 
 //tenuous
-#include "ofxExtras.h"
+#include "ofxLight.h"
 #include "ofxGenerative.h"
 
 /**
