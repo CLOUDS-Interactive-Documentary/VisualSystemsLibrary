@@ -295,10 +295,10 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
 	  if(bDrawToScreen)	selfPostDraw();
 	  
 	  //other
-		ofPushStyle();
-		ofEnableAlphaBlending();
-		getCursor().draw( ofGetMouseX(),ofGetMouseY() );
-		ofPopStyle();
+//		ofPushStyle();
+//		ofEnableAlphaBlending();
+//		getCursor().draw( ofGetMouseX(),ofGetMouseY() );
+//		ofPopStyle();
 	}
     
 	timeline->draw();
