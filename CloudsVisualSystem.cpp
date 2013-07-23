@@ -1438,8 +1438,13 @@ void CloudsVisualSystem::guiLightEvent(ofxUIEventArgs &e)
 
 void CloudsVisualSystem::setupTimeline()
 {
+
     timeline = new ofxTimeline();
+	timeline->setName("Working");
+	timeline->setWorkingFolder(getVisualSystemDataPath()+"Presets/Working/Timeline/");
+	
 	timeline->setup();
+	timeline->setShowInoutControl(false);
     timeline->setMinimalHeaders(true);
 	timeline->setFrameBased(false);
 	timeline->setSpacebarTogglePlay(false);
@@ -1735,6 +1740,7 @@ void CloudsVisualSystem::bindWidgetToTimeline(ofxUIWidget* widget)
         default:
             break;
     }
+
 }
 
 void CloudsVisualSystem::unBindWidgetFromTimeline(ofxUIWidget* widget)
@@ -2106,6 +2112,8 @@ void CloudsVisualSystem::loadTimelineUIMappings(string path)
         }
         XML->popTag();
     }
+	
+	timeline->setCurrentPage(0);
 }
 
 void CloudsVisualSystem::lightsBegin()
@@ -2166,21 +2174,21 @@ void CloudsVisualSystem::loadPresetGUISFromName(string presetName)
 
 void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 {
-		 
+    resetTimeline();
 	
     for(int i = 0; i < guis.size(); i++)
     {
         guis[i]->loadSettings(presetPath+"/"+guis[i]->getName()+".xml");
     }
     cam.reset();
-    ofxLoadCamera(cam, presetPath+"/"+"ofEasyCamSettings");
-    
-    resetTimeline();
+    ofxLoadCamera(cam, presetPath+"/ofEasyCamSettings");
 	
     loadTimelineUIMappings(presetPath+"/UITimelineMappings.xml");
 	timeline->setName( ofFilePath::getBaseName( presetPath ) );
     timeline->loadTracksFromFolder(presetPath+"/Timeline/");
+	timeline->setName("Working");
     timeline->saveTracksToFolder(getVisualSystemDataPath()+"Presets/Working/Timeline/");
+
 	timeline->setDurationInSeconds(timelineDuration);
 	timelineDuration = timeline->getDurationInSeconds();
 	
@@ -2189,7 +2197,6 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 	if(bShowTimeline){
 		stackGuiWindows();
 	}
-
 }
 
 void CloudsVisualSystem::savePresetGUIS(string presetName)
@@ -2208,11 +2215,15 @@ void CloudsVisualSystem::savePresetGUIS(string presetName)
         guis[i]->saveSettings(presetDirectory+guis[i]->getName()+".xml");
     }
     ofxSaveCamera(cam, getVisualSystemDataPath()+"Presets/"+presetName+"/ofEasyCamSettings");
+	
     saveTimelineUIMappings(getVisualSystemDataPath()+"Presets/"+presetName+"/UITimelineMappings.xml");
 	timeline->setName(presetName);
     timeline->saveTracksToFolder(getVisualSystemDataPath()+"Presets/"+presetName+"/Timeline/");
+
+	timeline->setName("Working");
     timeline->saveTracksToFolder(getVisualSystemDataPath()+"Presets/Working/Timeline/");
 
+	
 	ofxXmlSettings timeInfo;
 	timeInfo.addTag("timeinfo");
 	timeInfo.pushTag("timeinfo");
