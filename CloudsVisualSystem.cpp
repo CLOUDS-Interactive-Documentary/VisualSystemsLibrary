@@ -428,27 +428,7 @@ void CloudsVisualSystem::keyPressed(ofKeyEventArgs & args)
             
         case 'e':
         {
-            ofxUISuperCanvas *last = NULL;
-            for(vector<ofxUISuperCanvas *>::iterator it = guis.begin(); it != guis.end(); ++it)
-            {
-                (*it)->setMinified(false);
-                if(last != NULL)
-                {
-                    (*it)->getRect()->setX(last->getRect()->getX());
-                    (*it)->getRect()->setY(last->getRect()->getY()+last->getRect()->getHeight()+1);
-                    if((*it)->getRect()->getY()+(*it)->getRect()->getHeight() > ofGetHeight()-timeline->getHeight())
-                    {
-                        (*it)->getRect()->setX(last->getRect()->getX()+last->getRect()->getWidth()+1);
-                        (*it)->getRect()->setY(1);
-                    }
-                }
-                else
-                {
-                    (*it)->getRect()->setX(1);
-                    (*it)->getRect()->setY(1);
-                }
-                last = (*it);
-            }
+			stackGuiWindows();
         }
             break;
             
@@ -531,6 +511,30 @@ void CloudsVisualSystem::keyPressed(ofKeyEventArgs & args)
     }
 }
 
+void CloudsVisualSystem::stackGuiWindows(){
+	ofxUISuperCanvas *last = NULL;
+	for(vector<ofxUISuperCanvas *>::iterator it = guis.begin(); it != guis.end(); ++it)
+	{
+		(*it)->setMinified(false);
+		if(last != NULL)
+		{
+			(*it)->getRect()->setX(last->getRect()->getX());
+			(*it)->getRect()->setY(last->getRect()->getY()+last->getRect()->getHeight()+1);
+			if((*it)->getRect()->getY()+(*it)->getRect()->getHeight() > ofGetHeight()-timeline->getHeight())
+			{
+				(*it)->getRect()->setX(last->getRect()->getX()+last->getRect()->getWidth()+1);
+				(*it)->getRect()->setY(1);
+			}
+		}
+		else
+		{
+			(*it)->getRect()->setX(1);
+			(*it)->getRect()->setY(1);
+		}
+		last = (*it);
+	}
+}
+
 void CloudsVisualSystem::keyReleased(ofKeyEventArgs & args)
 {
     switch (args.key)
@@ -542,7 +546,7 @@ void CloudsVisualSystem::keyReleased(ofKeyEventArgs & args)
                 (*it)->setDrawWidgetPadding(false);
             }
         }
-            break;
+		break;
             
             
         default:
@@ -700,9 +704,13 @@ void CloudsVisualSystem::setupGui()
 vector<string> CloudsVisualSystem::getPresets()
 {
 	vector<string> presets;
-	ofDirectory presetsFolder = ofDirectory(getVisualSystemDataPath()+"Presets/");
+	string presetPath = getVisualSystemDataPath()+"Presets/";
+	ofDirectory presetsFolder = ofDirectory(presetPath);
+	cout << "PRESET PATH AT " << presetPath << endl;
+	
 	if(presetsFolder.exists()){
 		presetsFolder.listDir();
+		cout << " found " << presetsFolder.size() << " files " << endl;
 		for(int i = 0; i < presetsFolder.size(); i++){
 			if(presetsFolder.getFile(i).isDirectory() &&
                ofFilePath::removeTrailingSlash(presetsFolder.getName(i)) != "Working" &&
@@ -1688,14 +1696,17 @@ void CloudsVisualSystem::bindWidgetToTimeline(ofxUIWidget* widget)
         case OFX_UI_WIDGET_MULTIIMAGETOGGLE:
         {
             ofxUIToggle *t = (ofxUIToggle *) widget;
-            tlToggleMap[t] = timeline->addSwitches(widget->getName());
+            tlToggleMap[t] = timeline->addSwitches(widget->getName(),
+												   widget->getCanvasParent()->getName() + "_" + widget->getName() + ".xml");
         }
             break;
             
         case OFX_UI_WIDGET_NUMBERDIALER:
         {
             ofxUINumberDialer *nd = (ofxUINumberDialer *) widget;
-            tlDialerMap[nd] = timeline->addCurves(widget->getName(), ofRange(nd->getMin(), nd->getMax()), nd->getValue());
+            tlDialerMap[nd] = timeline->addCurves(widget->getName(),
+												  widget->getCanvasParent()->getName() + "_" + widget->getName() + ".xml",
+												  ofRange(nd->getMin(), nd->getMax()), nd->getValue());
         }
             break;
             
@@ -1711,7 +1722,9 @@ void CloudsVisualSystem::bindWidgetToTimeline(ofxUIWidget* widget)
         case OFX_UI_WIDGET_SLIDER_V:
         {
             ofxUISlider *s = (ofxUISlider *) widget;
-            tlSliderMap[s] = timeline->addCurves(widget->getName(), ofRange(s->getMin(), s->getMax()), s->getValue());
+            tlSliderMap[s] = timeline->addCurves(widget->getName(),
+												 widget->getCanvasParent()->getName() + "_" + widget->getName() + ".xml",
+												 ofRange(s->getMin(), s->getMax()), s->getValue());
         }
             break;
         default:
@@ -2119,12 +2132,12 @@ void CloudsVisualSystem::loadGUIS()
 {
     for(int i = 0; i < guis.size(); i++)
     {
-        guis[i]->loadSettings(getVisualSystemDataPath()+"Presets/Working/"+getSystemName()+guis[i]->getName()+".xml");
+        guis[i]->loadSettings(getVisualSystemDataPath()+"Presets/Working/"+guis[i]->getName()+".xml");
     }
     cam.reset();
     ofxLoadCamera(cam, getVisualSystemDataPath()+"Presets/Working/"+"ofEasyCamSettings");
     resetTimeline();
-    loadTimelineUIMappings(getVisualSystemDataPath()+"Presets/Working/"+getSystemName()+"UITimelineMappings.xml");
+    loadTimelineUIMappings(getVisualSystemDataPath()+"Presets/Working/UITimelineMappings.xml");
     timeline->loadTracksFromFolder(getVisualSystemDataPath()+"Presets/Working/Timeline/");
 }
 
@@ -2132,11 +2145,11 @@ void CloudsVisualSystem::saveGUIS()
 {
     for(int i = 0; i < guis.size(); i++)
     {
-        guis[i]->saveSettings(getVisualSystemDataPath()+"Presets/Working/"+getSystemName()+guis[i]->getName()+".xml");
+        guis[i]->saveSettings(getVisualSystemDataPath()+"Presets/Working/"+guis[i]->getName()+".xml");
     }
     ofxSaveCamera(cam, getVisualSystemDataPath()+"Presets/Working/"+"ofEasyCamSettings");
     
-    saveTimelineUIMappings(getVisualSystemDataPath()+"Presets/Working/"+getSystemName()+"UITimelineMappings.xml");
+    saveTimelineUIMappings(getVisualSystemDataPath()+"Presets/Working/UITimelineMappings.xml");
     
     timeline->saveTracksToFolder(getVisualSystemDataPath()+"Presets/Working/Timeline/");
 }
@@ -2152,14 +2165,14 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 	
     for(int i = 0; i < guis.size(); i++)
     {
-        guis[i]->loadSettings(presetPath+"/"+getSystemName()+guis[i]->getName()+".xml");
+        guis[i]->loadSettings(presetPath+"/"+guis[i]->getName()+".xml");
     }
     cam.reset();
     ofxLoadCamera(cam, presetPath+"/"+"ofEasyCamSettings");
     
     resetTimeline();
 	
-    loadTimelineUIMappings(presetPath+"/"+getSystemName()+"UITimelineMappings.xml");
+    loadTimelineUIMappings(presetPath+"/UITimelineMappings.xml");
 	timeline->setName( ofFilePath::getBaseName( presetPath ) );
     timeline->loadTracksFromFolder(presetPath+"/Timeline/");
     timeline->saveTracksToFolder(getVisualSystemDataPath()+"Presets/Working/Timeline/");
@@ -2167,6 +2180,10 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 	timelineDuration = timeline->getDurationInSeconds();
 	
 	selfPresetLoaded(presetPath);
+	
+	if(bShowTimeline){
+		stackGuiWindows();
+	}
 
 }
 
@@ -2183,13 +2200,13 @@ void CloudsVisualSystem::savePresetGUIS(string presetName)
     
     for(int i = 0; i < guis.size(); i++)
     {
-        guis[i]->saveSettings(presetDirectory+getSystemName()+guis[i]->getName()+".xml");
+        guis[i]->saveSettings(presetDirectory+guis[i]->getName()+".xml");
     }
-    ofxSaveCamera(cam, getVisualSystemDataPath()+"Presets/"+presetName+"/"+"ofEasyCamSettings");
-    saveTimelineUIMappings(getVisualSystemDataPath()+"Presets/"+presetName+"/"+getSystemName()+"UITimelineMappings.xml");
+    ofxSaveCamera(cam, getVisualSystemDataPath()+"Presets/"+presetName+"/ofEasyCamSettings");
+    saveTimelineUIMappings(getVisualSystemDataPath()+"Presets/"+presetName+"/UITimelineMappings.xml");
 	timeline->setName(presetName);
     timeline->saveTracksToFolder(getVisualSystemDataPath()+"Presets/"+presetName+"/Timeline/");
-    timeline->saveTracksToFolder(getVisualSystemDataPath()+"Presets/"+"Working/Timeline/");
+    timeline->saveTracksToFolder(getVisualSystemDataPath()+"Presets/Working/Timeline/");
 
 	ofxXmlSettings timeInfo;
 	timeInfo.addTag("timeinfo");

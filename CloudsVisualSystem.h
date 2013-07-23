@@ -235,6 +235,8 @@ class CloudsVisualSystem {
     ofxUISuperCanvas *presetGui;
     ofxUISuperCanvas *tlGui;
 	
+	void stackGuiWindows();
+	
     vector<ofxUISuperCanvas *> guis;
     map<string, ofxUICanvas *> guimap;
 	
