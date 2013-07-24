@@ -40,7 +40,7 @@ class CloudsVisualSystem {
 	
 	enum RGBDTransitionType
 	{
-	  TWO_DIMENIONAL = 0,
+	  TWO_DIMENSIONAL = 0,
 	  FLY_THROUGH = 1,
 	  WHIP_PAN = 2,
 	  RGBD = 3
