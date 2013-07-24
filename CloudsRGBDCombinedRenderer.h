@@ -56,7 +56,13 @@ public:
 	ofPtr<ofVideoPlayer> getSharedPlayerPtr(){
 		return ofPtr<ofVideoPlayer>( new ofVideoPlayer());
 	}
-	
+	float getFadeIn(){
+		return 1.;
+	};
+	float getFadeOut(){
+		return 1.;
+	};
+
 #ifdef AVF_PLAYER
 	ofxAVFVideoPlayer& getPlayer();
 #else
