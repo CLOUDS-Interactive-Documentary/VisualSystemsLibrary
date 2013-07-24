@@ -242,11 +242,6 @@ class CloudsVisualSystem {
 	void setDrawToScreen( bool state );
 	bool getDrawToScreen();
 	
-	bool is3D();
-	void set3D( bool val = true ){ bIs3D = val;}
-	bool set2D( bool val = true ){ bIs3D = !val;}
-	
-	
 	
   protected:
 		
