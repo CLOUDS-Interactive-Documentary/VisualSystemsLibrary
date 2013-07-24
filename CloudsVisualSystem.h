@@ -223,15 +223,12 @@ class CloudsVisualSystem {
 	//LB
 	ofVec3f getCameraPosition();
 	ofVec3f positionOffset;
-	
 
 
 	bool cursorIsOverGUI();
 	
 	void setDrawToScreen( bool state );
 	bool getDrawToScreen();
-	
-	
 	
   protected:
 		
@@ -266,6 +263,10 @@ class CloudsVisualSystem {
     ofxUISlider *satSlider;
     ofxUISlider *briSlider;
 	ofxUIRadio *presetRadio;
+	
+	bool use2DTransition;
+	bool use3DFlybyTransition;
+	bool use3DWhipPan;
 	
     //ANIMATORS
     vector<ofx1DExtruder *> extruders;

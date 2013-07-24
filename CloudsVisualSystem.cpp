@@ -1004,6 +1004,7 @@ void CloudsVisualSystem::guiLightingEvent(ofxUIEventArgs &e)
     }
 }
 
+
 void CloudsVisualSystem::setupCameraGui()
 {
     camGui = new ofxUISuperCanvas("CAMERA", gui);
@@ -1027,8 +1028,15 @@ void CloudsVisualSystem::setupCameraGui()
     camGui->addLabel("TRACK");
     camGui->addButton("ADD KEYFRAME", false);
     camGui->addToggle("LOCK TO TRACK", cameraTrack->lockCameraToTrack);
-	
-	
+	camGui->addLabel("TRANSITIONS");
+    camGui->addToggle("2D", &use2DTransition);
+    camGui->addToggle("3D FLYTHROUGH", &use3DFlybyTransition);
+    camGui->addToggle("3D WHIP PAN", &use3DWhipPan);
+
+	bool use2DTransition;
+	bool useFlybyTransition;
+	bool useTurnAroundTransition;
+
     camGui->addSpacer();
     vector<string> views;
     views.push_back("TOP");
