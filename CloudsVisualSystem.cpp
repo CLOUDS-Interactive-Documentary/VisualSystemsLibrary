@@ -104,6 +104,9 @@ void CloudsVisualSystem::setup(){
     
 	hideGUIS();
 	
+	//default is 3D
+	set3D( true );
+	
 }
 
 void CloudsVisualSystem::playSystem(){
@@ -2650,4 +2653,9 @@ void CloudsVisualSystem::selfSetupTimelineGui()
 void CloudsVisualSystem::selfTimelineGuiEvent(ofxUIEventArgs &e)
 {
     
+}
+
+
+RGBDTransitionType CloudsVisualSystem::getTransitionType(){
+	return transitionType;
 }

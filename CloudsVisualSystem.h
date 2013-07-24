@@ -37,6 +37,15 @@ class CloudsVisualSystem {
 	CloudsVisualSystem();
 	~CloudsVisualSystem();
 	
+	
+	enum RGBDTransitionType
+	{
+	  TWO_DIMENIONAL = 0,
+	  FLY_THROUGH = 1,
+	  WHIP_PAN = 2,
+	  RGBD = 3
+	};
+	
 	static ofFbo& getStaticRenderTarget(); //default
 	
 	ofFbo& getSharedRenderTarget();
@@ -224,12 +233,18 @@ class CloudsVisualSystem {
 	ofVec3f getCameraPosition();
 	ofVec3f positionOffset;
 
-
+	RGBDTransitionType getTransitionType();
+	
 	bool cursorIsOverGUI();
 	
 	void setDrawToScreen( bool state );
 	bool getDrawToScreen();
 	
+	bool is3D();
+	void set3D( bool val = true ){ bIs3D = val;}
+	bool set2D( bool val = true ){ bIs3D = !val;}
+	
+
   protected:
 		
 	//UI
@@ -263,10 +278,7 @@ class CloudsVisualSystem {
     ofxUISlider *satSlider;
     ofxUISlider *briSlider;
 	ofxUIRadio *presetRadio;
-	
-	bool use2DTransition;
-	bool use3DFlybyTransition;
-	bool use3DWhipPan;
+	ofxUIRadio *transitionRadio;
 	
     //ANIMATORS
     vector<ofx1DExtruder *> extruders;
@@ -292,6 +304,7 @@ class CloudsVisualSystem {
     float debugGridSize;
 	bool bClearBackground;
 	bool bDrawToScreen;
+	bool bIs3D;
 	
     //CAM
     float camDistance;
