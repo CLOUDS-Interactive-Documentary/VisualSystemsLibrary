@@ -105,9 +105,6 @@ void CloudsVisualSystem::setup(){
     
 	hideGUIS();
 	
-	//default is 3D
-	set3D( true );
-	
 }
 
 void CloudsVisualSystem::playSystem(){
