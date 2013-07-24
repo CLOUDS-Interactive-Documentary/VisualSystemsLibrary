@@ -1034,7 +1034,7 @@ void CloudsVisualSystem::setupCameraGui()
 	transitions.push_back("3D FLY THROUGH");
 	transitions.push_back("3D WHIP PAN");
 	transitions.push_back("3D RGBD");
-	transitionRadio = camGui->addRadio("TRANSITION", transitions, OFX_UI_ORIENTATION_HORIZONTAL);
+	transitionRadio = camGui->addRadio("TRANSITION", transitions, OFX_UI_ORIENTATION_VERTICAL);
 
     camGui->addSpacer();
     vector<string> views;
