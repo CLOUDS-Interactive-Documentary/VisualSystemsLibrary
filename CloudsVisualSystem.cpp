@@ -25,6 +25,7 @@ CloudsVisualSystem::CloudsVisualSystem(){
 	bDrawToScreen = true;
 	bUseCameraTrack = false;
 	cameraTrack = NULL;
+	
 }
 
 CloudsVisualSystem::~CloudsVisualSystem(){
@@ -1031,14 +1032,12 @@ void CloudsVisualSystem::setupCameraGui()
     camGui->addLabel("TRACK");
     camGui->addButton("ADD KEYFRAME", false);
     camGui->addToggle("LOCK TO TRACK", cameraTrack->lockCameraToTrack);
-	camGui->addLabel("TRANSITIONS");
-    camGui->addToggle("2D", &use2DTransition);
-    camGui->addToggle("3D FLYTHROUGH", &use3DFlybyTransition);
-    camGui->addToggle("3D WHIP PAN", &use3DWhipPan);
-
-	bool use2DTransition;
-	bool useFlybyTransition;
-	bool useTurnAroundTransition;
+	vector<string> transitions;
+	transitions.push_back("2D");
+	transitions.push_back("3D FLY THROUGH");
+	transitions.push_back("3D WHIP PAN");
+	transitions.push_back("3D RGBD");
+	transitionRadio = camGui->addRadio("TRANSITION", transitions, OFX_UI_ORIENTATION_HORIZONTAL);
 
     camGui->addSpacer();
     vector<string> views;
@@ -1057,6 +1056,26 @@ void CloudsVisualSystem::setupCameraGui()
     ofAddListener(camGui->newGUIEvent,this,&CloudsVisualSystem::guiCameraEvent);
     guis.push_back(camGui);
     guimap[camGui->getName()] = camGui;
+}
+
+
+
+CloudsVisualSystem::RGBDTransitionType CloudsVisualSystem::getTransitionType(){
+	
+	string activeTransitionType = transitionRadio->getActive()->getName();
+	if(activeTransitionType == "2D"){
+		return TWO_DIMENIONAL;
+	}
+	else if(activeTransitionType == "3D FLY THROUGH"){
+		return FLY_THROUGH;
+	}
+	else if(activeTransitionType == "3D WHIP PAN"){
+		return WHIP_PAN;
+	}
+	else if(activeTransitionType == "3D RGBD"){
+		return RGBD;
+	}
+	return WHIP_PAN;
 }
 
 void CloudsVisualSystem::guiCameraEvent(ofxUIEventArgs &e)
@@ -2653,9 +2672,4 @@ void CloudsVisualSystem::selfSetupTimelineGui()
 void CloudsVisualSystem::selfTimelineGuiEvent(ofxUIEventArgs &e)
 {
     
-}
-
-
-RGBDTransitionType CloudsVisualSystem::getTransitionType(){
-	return transitionType;
 }
