@@ -1055,21 +1055,25 @@ void CloudsVisualSystem::setupCameraGui()
     guimap[camGui->getName()] = camGui;
 }
 
-
-
-CloudsVisualSystem::RGBDTransitionType CloudsVisualSystem::getTransitionType(){
+CloudsVisualSystem::RGBDTransitionType CloudsVisualSystem::getTransitionType()
+{
+	if(transitionRadio->getActive() == NULL) return WHIP_PAN;
 	
 	string activeTransitionType = transitionRadio->getActive()->getName();
 	if(activeTransitionType == "2D"){
-		return TWO_DIMENIONAL;
+		cout << "TWO_DIMENSIONAL" << endl;
+		return TWO_DIMENSIONAL;
 	}
 	else if(activeTransitionType == "3D FLY THROUGH"){
+		cout << "3D FLY THROUGH" << endl;
 		return FLY_THROUGH;
 	}
 	else if(activeTransitionType == "3D WHIP PAN"){
+		cout << "3D WHIP PAN" << endl;
 		return WHIP_PAN;
 	}
 	else if(activeTransitionType == "3D RGBD"){
+		cout << "3D RGBD" << endl;
 		return RGBD;
 	}
 	return WHIP_PAN;
