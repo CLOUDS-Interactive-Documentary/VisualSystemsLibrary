@@ -92,7 +92,8 @@ public:
 
     bool bFlipTexture;
     bool bMirror;
-    
+	
+	float maxVolume;
   protected:
     void setupProjectionUniforms();
     void setTextureScaleForImage(ofBaseHasTexture& _texture);

@@ -21,6 +21,7 @@ CloudsRGBDCombinedRenderer::CloudsRGBDCombinedRenderer(){
     
 	minDepth = 400;
 	maxDepth = 2000;
+	maxVolume = 1.5;
 	
 	clipPrerolled = false;
     bMirror     = false;
@@ -359,12 +360,12 @@ void CloudsRGBDCombinedRenderer::update(){
 	
 	if(position < 1.0){
 		//audioVolume = powf(position,2.0);
-		audioVolume = ofMap(position, .8, 1.0, 0., 1.0, true);
+		audioVolume = ofMap(position, .8, 1.0, 0., maxVolume, true);
 //		cout << "VOLUME " << audioVolume << endl;
 	}
 	else if(position > duration - 1.0){
 //		audioVolume = powf(duration - position, 2.0);
-		audioVolume = ofMap(position, duration - 1.0, duration - .8, 1.0, 0.0, true);
+		audioVolume = ofMap(position, duration - 1.0, duration - .8, maxVolume, 0.0, true);
 //		cout << "VOLUME " << audioVolume << endl;
 	}
 
