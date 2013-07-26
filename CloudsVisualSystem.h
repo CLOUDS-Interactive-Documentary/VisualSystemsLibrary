@@ -240,6 +240,8 @@ class CloudsVisualSystem {
 	void setDrawToScreen( bool state );
 	bool getDrawToScreen();
 	
+	bool bIs3D;
+	
   protected:
 		
 	//UI
@@ -299,7 +301,7 @@ class CloudsVisualSystem {
     float debugGridSize;
 	bool bClearBackground;
 	bool bDrawToScreen;
-	bool bIs3D;
+//	bool bIs3D;
 	
     //CAM
     float camDistance;
