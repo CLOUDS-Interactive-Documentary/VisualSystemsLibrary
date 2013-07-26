@@ -240,6 +240,9 @@ class CloudsVisualSystem {
 	void setDrawToScreen( bool state );
 	bool getDrawToScreen();
 	
+	void loadTestVideo();
+	float getCurrentAudioAmplitude();
+	
   protected:
 		
 	//UI

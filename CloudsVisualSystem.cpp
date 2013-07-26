@@ -883,7 +883,7 @@ void CloudsVisualSystem::setupBackgroundGui()
     bgGui->addWidgetDown(toggle, OFX_UI_ALIGN_RIGHT, true);
     bgGui->addWidgetToHeader(toggle);
     bgGui->addSpacer();
-    
+
     bgGui->addSlider("HUE", 0.0, 255.0, bgHue->getPosPtr());
     bgGui->addSlider("SAT", 0.0, 255.0, bgSat->getPosPtr());
     bgGui->addSlider("BRI", 0.0, 255.0, bgBri->getPosPtr());
@@ -2341,6 +2341,17 @@ ofCamera& CloudsVisualSystem::getCameraRef(){
 void CloudsVisualSystem::setDrawToScreen( bool state )
 {
 	bDrawToScreen = state;
+}
+
+void CloudsVisualSystem::loadTestVideo(){
+	sharedRenderer->setup(getVisualSystemDataPath() + "TestVideos/TestVideo.mov",
+						  getVisualSystemDataPath() + "TestVideos/TestVideo.xml" );
+	
+	sharedRenderer->swapAndPlay();
+}
+
+float CloudsVisualSystem::getCurrentAudioAmplitude(){
+	
 }
 
 bool CloudsVisualSystem::getDrawToScreen()
