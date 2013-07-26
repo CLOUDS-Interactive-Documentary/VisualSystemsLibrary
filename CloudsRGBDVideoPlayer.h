@@ -14,30 +14,32 @@
 #include "ofxAVFVideoPlayer.h"
 #endif
 
-class CloudsRGBDCombinedRenderer {
+class CloudsRGBDVideoPlayer {
 public:
     
-    CloudsRGBDCombinedRenderer();
-    ~CloudsRGBDCombinedRenderer();
+    CloudsRGBDVideoPlayer();
+    ~CloudsRGBDVideoPlayer();
 	
     //  SET
     //
 	bool setup(string videoPath, string calibrationXMLPath, float offsetTime = 0);
 	void swapAndPlay();
 	
-	void setShaderPath(string _shaderPath);
-	void reloadShader();
+//	void setShaderPath(string _shaderPath);
+//	void reloadShader();
     
-	void setSimplification(ofVec2f _simplification);
+//	void setSimplification(ofVec2f _simplification);
 	
     //  Use these to project and draw textured custom geometry
     //
-	bool bindRenderer();
-	void unbindRenderer();
+//	bool ();
+//	void unbindRenderer();
     
+	void setupProjectionUniforms(ofShader& shader);
+
     //  UPDATE
     //
-    void update();
+    void update(ofEventArgs& args);
     
 	//  CYCLE
 	//
@@ -47,10 +49,10 @@ public:
 	
     //  DRAW
     //
-    void drawMesh();
-	void drawPointCloud();
-	void drawWireFrame();
-	void draw(ofPolyRenderMode drawMode);
+//    void drawMesh();
+//	void drawPointCloud();
+//	void drawWireFrame();
+//	void draw(ofPolyRenderMode drawMode);
 
 	// UNIMPLEMENTED
 	ofPtr<ofVideoPlayer> getSharedPlayerPtr(){
@@ -69,11 +71,11 @@ public:
 	ofVideoPlayer& getPlayer();
 #endif
 	
-	ofShader& getShader();
+//	ofShader& getShader();
 	
-	// Move in 3D Space
-    ofVec3f worldPosition;
-	ofVec3f worldRotation;
+//	// Move in 3D Space
+//    ofVec3f worldPosition;
+//	ofVec3f worldRotation;
 	
 	// Fix extrinsics
 	ofVec3f adjustTranslate;
@@ -90,12 +92,11 @@ public:
 	float farClip;
 	float nearClip;
 
-    bool bFlipTexture;
-    bool bMirror;
+//    bool bFlipTexture;
+//    bool bMirror;
 	
 	float maxVolume;
   protected:
-    void setupProjectionUniforms();
     void setTextureScaleForImage(ofBaseHasTexture& _texture);
 
 #ifdef AVF_PLAYER
@@ -105,6 +106,8 @@ public:
 	ofVideoPlayer currentPlayer;
 	ofVideoPlayer nextPlayer;
 #endif
+	
+	bool bEventRegistered;
 	
 	ofShader shader;
     string shaderPath;

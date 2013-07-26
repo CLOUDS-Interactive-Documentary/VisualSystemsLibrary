@@ -1,19 +1,19 @@
 //
-//  CloudsRGBDCombinedRenderer.cpp
-//  CloudsRGBDCombinedRenderer
+//  CloudsRGBDVideoPlayer.cpp
+//  CloudsRGBDVideoPlayer
 //
 //  Created by Patricio Gonzalez Vivo on 4/14/13.
 //
 //
 
-#include "CloudsRGBDCombinedRenderer.h"
+#include "CloudsRGBDVideoPlayer.h"
 
 //---------------------------------------------------------------
-CloudsRGBDCombinedRenderer::CloudsRGBDCombinedRenderer(){
+CloudsRGBDVideoPlayer::CloudsRGBDVideoPlayer(){
 
-	setShaderPath("shaders/rgbdcombined");
+//	setShaderPath("shaders/rgbdcombined");
     
-    simplify.set(0,0);
+//    simplify.set(0,0);
     
 	nearClip    = 1.0f;
 	edgeClip    = 50.0f;
@@ -23,23 +23,27 @@ CloudsRGBDCombinedRenderer::CloudsRGBDCombinedRenderer(){
 	maxDepth = 2000;
 	maxVolume = 1.5;
 	
+	bEventRegistered = false;
 	clipPrerolled = false;
-    bMirror     = false;
-    bFlipTexture = false;
-    bRendererBound = false;
+//    bMirror     = false;
+//    bFlipTexture = false;
+//    bRendererBound = false;
 }
 
 //---------------------------------------------------------------
-CloudsRGBDCombinedRenderer::~CloudsRGBDCombinedRenderer(){
+CloudsRGBDVideoPlayer::~CloudsRGBDVideoPlayer(){
     
 }
 
 //---------------------------------------------------------------
-bool CloudsRGBDCombinedRenderer::setup(string videoPath, string calibrationXMLPath, float offsetTime){
+bool CloudsRGBDVideoPlayer::setup(string videoPath, string calibrationXMLPath, float offsetTime){
 	
+	if(!bEventRegistered){
+		ofAddListener(ofEvents().update, this, &CloudsRGBDVideoPlayer::update);
+	}
 //#ifdef AVF_PLAYER
 	if(!nextPlayer.loadMovie(videoPath)){
-		ofLogError() << "CloudsRGBDCombinedRenderer::setup -- Movie path " << videoPath << " failed to load";
+		ofLogError() << "CloudsRGBDVideoPlayer::setup -- Movie path " << videoPath << " failed to load";
 		return false;
 	}
 #ifdef AVF_PLAYER
@@ -53,11 +57,11 @@ bool CloudsRGBDCombinedRenderer::setup(string videoPath, string calibrationXMLPa
 	return true;
 }
 
-void CloudsRGBDCombinedRenderer::swapAndPlay(){
+void CloudsRGBDVideoPlayer::swapAndPlay(){
 	
 	ofxXmlSettings XML;
 	if ( !XML.loadFile(nextCalibrationXML) ){
-		ofLogError() << "CloudsRGBDCombinedRenderer::setup -- XML Path " << nextCalibrationXML << " failed to load";
+		ofLogError() << "CloudsRGBDVideoPlayer::setup -- XML Path " << nextCalibrationXML << " failed to load";
 		return;
 	}
 	
@@ -165,23 +169,23 @@ void CloudsRGBDCombinedRenderer::swapAndPlay(){
 
 }
 
-void CloudsRGBDCombinedRenderer::setShaderPath(string _shaderPath){
-    shaderPath = _shaderPath;
-	reloadShader();
-}
+//void CloudsRGBDVideoPlayer::setShaderPath(string _shaderPath){
+//    shaderPath = _shaderPath;
+//	reloadShader();
+//}
 
-void CloudsRGBDCombinedRenderer::setSimplification(ofVec2f _simplification){
-	
-	if(simplify == _simplification){
-		return;
-	}
-	
-	if(_simplification.x <= 0  || _simplification.y <= 0){
-		return;
-	}
-	
-	simplify = _simplification;
-	
+//void CloudsRGBDVideoPlayer::setSimplification(ofVec2f _simplification){
+//	
+//	if(simplify == _simplification){
+//		return;
+//	}
+//	
+//	if(_simplification.x <= 0  || _simplification.y <= 0){
+//		return;
+//	}
+//	
+//	simplify = _simplification;
+
 /*
 	mesh.clearIndices();
 	int x = 0;
@@ -231,56 +235,54 @@ void CloudsRGBDCombinedRenderer::setSimplification(ofVec2f _simplification){
 	bMeshGenerated = true;
 */
 	
-	if(bRendererBound){
-		shader.setUniform2f("simplify", simplify.x,simplify.y);
-	}
-}
+//	if(bRendererBound){
+//		shader.setUniform2f("simplify", simplify.x,simplify.y);
+//	}
+//}
 
-void CloudsRGBDCombinedRenderer::reloadShader(){
-	shader.load( shaderPath );
-}
+//void CloudsRGBDVideoPlayer::reloadShader(){
+//	shader.load( shaderPath );
+//}
 
 //--------------------------------------------------------------- BINDERS
-bool CloudsRGBDCombinedRenderer::bindRenderer(){
-    ofPushMatrix();
-	
-	ofScale(1, -1, 1);
-	if(!bMirror){
-		ofScale(-1, 1, 1);
-	}
-	
-	ofRotate(worldRotation.x,1,0,0);
-	ofRotate(worldRotation.y,0,1,0);
-	ofRotate(worldRotation.z,0,0,1);
-    
-	shader.begin();
-    
-	setupProjectionUniforms();
-	
-	bRendererBound = true;
-	return true;
-}
+//bool CloudsRGBDVideoPlayer::bindRenderer(){
+//    ofPushMatrix();
+//	
+//	ofScale(1, -1, 1);
+//	if(!bMirror){
+//		ofScale(-1, 1, 1);
+//	}
+//	
+//	ofRotate(worldRotation.x,1,0,0);
+//	ofRotate(worldRotation.y,0,1,0);
+//	ofRotate(worldRotation.z,0,0,1);
+//    
+//	shader.begin();
+//    
+//	setupProjectionUniforms();
+//	
+//	bRendererBound = true;
+//	return true;
+//}
 
-void CloudsRGBDCombinedRenderer::unbindRenderer(){
-    if(!bRendererBound){
-		ofLogError("ofxRGBDGPURenderer::unbindRenderer -- called without renderer bound");
-	 	return;
-	}
-	
-	shader.end();
-	bRendererBound = false;
-    
-	ofPopMatrix();
-}
+//void CloudsRGBDVideoPlayer::unbindRenderer(){
+//    if(!bRendererBound){
+//		ofLogError("ofxRGBDGPURenderer::unbindRenderer -- called without renderer bound");
+//	 	return;
+//	}
+//	
+//	shader.end();
+//	bRendererBound = false;
+//    
+//	ofPopMatrix();
+//}
 
-void CloudsRGBDCombinedRenderer::setupProjectionUniforms(){
+void CloudsRGBDVideoPlayer::setupProjectionUniforms(ofShader& shader){
     
 	if(!getPlayer().isLoaded()){
-		ofLogWarning() << " CloudsRGBDCombinedRenderer::setupProjectionUniforms -- player is not ready";
+		ofLogWarning() << " CloudsRGBDVideoPlayer::setupProjectionUniforms -- player is not ready";
 		return;
 	}
-	
-	getPlayer().setLoopState(OF_LOOP_NONE);
 	
     shader.setUniformTexture("texture", getPlayer().getTextureReference(), 0);
     shader.setUniform2f("textureSize",  getPlayer().getWidth(), getPlayer().getHeight());
@@ -327,20 +329,20 @@ void CloudsRGBDCombinedRenderer::setupProjectionUniforms(){
 
 //--------------------------------------------------------------- ACTIONS
 #ifdef AVF_PLAYER
-ofxAVFVideoPlayer& CloudsRGBDCombinedRenderer::getPlayer(){
+ofxAVFVideoPlayer& CloudsRGBDVideoPlayer::getPlayer(){
 #else
-ofVideoPlayer& CloudsRGBDCombinedRenderer::getPlayer(){
+ofVideoPlayer& CloudsRGBDVideoPlayer::getPlayer(){
 #endif
 	return currentPlayer;
 }
 
-//--------------------------------------------------------------- ACTIONS
-ofShader& CloudsRGBDCombinedRenderer::getShader(){
-	return shader;
-}
+////--------------------------------------------------------------- ACTIONS
+//ofShader& CloudsRGBDVideoPlayer::getShader(){
+//	return shader;
+//}
 
 //--------------------------------------------------------------- ACTIONS
-void CloudsRGBDCombinedRenderer::update(){
+void CloudsRGBDVideoPlayer::update(ofEventArgs& args){
 
 	currentPlayer.update();
 	if(clipPrerolled){
@@ -359,14 +361,14 @@ void CloudsRGBDCombinedRenderer::update(){
 	//cout << "position is " << position << " " << duration << " duration " << endl;
 	
 	if(position < 1.0){
-		//audioVolume = powf(position,2.0);
+
 		audioVolume = ofMap(position, .8, 1.0, 0., maxVolume, true);
-//		cout << "VOLUME " << audioVolume << endl;
+
 	}
 	else if(position > duration - 1.0){
-//		audioVolume = powf(duration - position, 2.0);
+
 		audioVolume = ofMap(position, duration - 1.0, duration - .8, maxVolume, 0.0, true);
-//		cout << "VOLUME " << audioVolume << endl;
+
 	}
 
 	getPlayer().setVolume(audioVolume);
@@ -376,36 +378,36 @@ void CloudsRGBDCombinedRenderer::update(){
 	}
 }
 
-bool CloudsRGBDCombinedRenderer::isPlaying(){
+bool CloudsRGBDVideoPlayer::isPlaying(){
 	return getPlayer().isLoaded() && getPlayer().isPlaying();
 }
 
-bool CloudsRGBDCombinedRenderer::isDone(){
+bool CloudsRGBDVideoPlayer::isDone(){
 	return getPlayer().isLoaded() && !getPlayer().isPlaying();
 }
 
-void CloudsRGBDCombinedRenderer::drawMesh(){
-	draw(OF_MESH_FILL);
-}
-void CloudsRGBDCombinedRenderer::drawPointCloud(){
-	draw(OF_MESH_POINTS);
-}
-void CloudsRGBDCombinedRenderer::drawWireFrame(){
-	draw(OF_MESH_WIREFRAME);
-}
-
-void CloudsRGBDCombinedRenderer::draw(ofPolyRenderMode drawMode){
-    if(bindRenderer()){
-		
-		switch(drawMode){
-			case OF_MESH_POINTS:
-				mesh.drawVertices(); break;
-			case OF_MESH_WIREFRAME:
-				mesh.drawWireframe(); break;
-			case OF_MESH_FILL:
-				mesh.drawFaces(); break;
-		}
-		
-		unbindRenderer();
-	}
-}
+//void CloudsRGBDVideoPlayer::drawMesh(){
+//	draw(OF_MESH_FILL);
+//}
+//void CloudsRGBDVideoPlayer::drawPointCloud(){
+//	draw(OF_MESH_POINTS);
+//}
+//void CloudsRGBDVideoPlayer::drawWireFrame(){
+//	draw(OF_MESH_WIREFRAME);
+//}
+//
+//void CloudsRGBDVideoPlayer::draw(ofPolyRenderMode drawMode){
+//    if(bindRenderer()){
+//		
+//		switch(drawMode){
+//			case OF_MESH_POINTS:
+//				mesh.drawVertices(); break;
+//			case OF_MESH_WIREFRAME:
+//				mesh.drawWireframe(); break;
+//			case OF_MESH_FILL:
+//				mesh.drawFaces(); break;
+//		}
+//		
+//		unbindRenderer();
+//	}
+//}
