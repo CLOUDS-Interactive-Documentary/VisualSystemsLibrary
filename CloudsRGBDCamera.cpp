@@ -10,11 +10,11 @@
 
 CloudsRGBDCamera::CloudsRGBDCamera(){
 	sideDistance = 100;
-	frontDistance = 150;
-	sidePullback = -50;
-	liftAmount = 50;
-	liftRange = 25;
-	dropAmount = 25;
+	frontDistance = 147.54;
+	sidePullback = -48;
+	liftAmount = 20;
+	liftRange = 65;
+	dropAmount = 33;
 	isSetup = false;
 	damp = .1;
 }
@@ -33,9 +33,9 @@ void CloudsRGBDCamera::remove(){
 	if(isSetup){
 		isSetup = false;
 		ofRemoveListener(ofEvents().update, this, &CloudsRGBDCamera::update);
-		
 	}
 }
+
 void CloudsRGBDCamera::update(ofEventArgs& args){
 	setPositionFromMouse();
 }
