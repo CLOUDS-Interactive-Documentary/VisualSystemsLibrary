@@ -230,6 +230,10 @@ class CloudsVisualSystem {
 	void setCurrentCamera( ofCamera* swappedInCam );
 	virtual ofCamera& getCameraRef();
 	ofCamera* getCurrentCamera();
+	
+	ofVec3f translatedHeadPosition;
+	float pointcloudScale;
+	float pointcloudOffsetZ;
 	CloudsRGBDCamera cloudsCamera;
 	
 	//LB

@@ -26,8 +26,6 @@ public:
 	void swapAndPlay();
 	
 	void setupProjectionUniforms(ofShader& shader);
-
-
     
 	//  CYCLE
 	//
