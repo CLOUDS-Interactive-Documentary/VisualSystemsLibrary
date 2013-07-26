@@ -33,7 +33,9 @@ bool CloudsRGBDVideoPlayer::setup(string videoPath, string calibrationXMLPath, f
 	
 	if(!bEventRegistered){
 		ofAddListener(ofEvents().update, this, &CloudsRGBDVideoPlayer::update);
+		bEventRegistered = true;
 	}
+	
 //#ifdef AVF_PLAYER
 	if(!nextPlayer.loadMovie(videoPath)){
 		ofLogError() << "CloudsRGBDVideoPlayer::setup -- Movie path " << videoPath << " failed to load";

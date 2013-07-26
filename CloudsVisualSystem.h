@@ -249,7 +249,7 @@ class CloudsVisualSystem {
 	bool getDrawToScreen();
 	
 
-	void loadTestVideo();
+//	void loadTestVideo();
 	float getCurrentAudioAmplitude();
 	
   protected:

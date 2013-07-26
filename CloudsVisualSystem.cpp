@@ -30,6 +30,7 @@ CloudsVisualSystem::CloudsVisualSystem(){
 	bDrawToScreen = true;
 	bUseCameraTrack = false;
 	cameraTrack = NULL;
+	pointcloudScale = .25;
 	
 }
 
@@ -269,7 +270,8 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
 	  
 	  
 	  //start our 3d scene
-		currentCamera->begin();
+		getCameraRef().begin();
+//		currentCamera->begin();
 	  
         ofRotateX(xRot->getPos());
         ofRotateY(yRot->getPos());
@@ -295,7 +297,7 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
 		
         lightsEnd();
         
-		currentCamera->end();
+		getCameraRef().end();
 	  
 		//draw point cloud
 //		cloudsCamera.begin();
@@ -2382,14 +2384,6 @@ void CloudsVisualSystem::setDrawToScreen( bool state )
 	bDrawToScreen = state;
 }
 
-void CloudsVisualSystem::loadTestVideo(){
-	if(ofFile::doesFileExist(getVisualSystemDataPath() + "TestVideo/Jer_TestVideo.mov")){
-		getRGBDVideoPlayer().setup(getVisualSystemDataPath() + "TestVideo/Jer_TestVideo.mov",
-								   getVisualSystemDataPath() + "TestVideo/Jer_TestVideo.xml" );
-		
-		getRGBDVideoPlayer().swapAndPlay();
-	}
-}
 
 float CloudsVisualSystem::getCurrentAudioAmplitude(){
 	
