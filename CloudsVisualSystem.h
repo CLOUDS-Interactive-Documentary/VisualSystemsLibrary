@@ -64,7 +64,6 @@ class CloudsVisualSystem {
     virtual void selfDrawDebug();
     virtual void selfSceneTransformation();
     virtual void selfDraw();
-	virtual void selfDrawRGBD();
 	virtual void selfDrawOverlay();
 	virtual void selfPostDraw();
 	virtual void selfPresetLoaded(string presetPath);
@@ -96,6 +95,8 @@ class CloudsVisualSystem {
 	//END SUBCLASS METHODS
 	
 	virtual string getSystemName();
+	
+	void setupRGBDTransforms();
 	
 	//Data Folder Path
     string getVisualSystemDataPath();

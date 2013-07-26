@@ -298,17 +298,14 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
 		currentCamera->end();
 	  
 		//draw point cloud
-		cloudsCamera.begin();
-		ofPushMatrix();
-		//move the pointcloud
-		ofTranslate(0,0,pointcloudOffsetZ);
-		ofScale(pointcloudScale,pointcloudScale,pointcloudScale);
-		ofScale(-1, -1, 1);
-
-		selfDrawRGBD();
-		ofPopMatrix();
-		
-		cloudsCamera.end();
+//		cloudsCamera.begin();
+//		ofPushMatrix();
+//		//move the pointcloud
+//
+//		selfDrawRGBD();
+//		ofPopMatrix();
+//		
+//		cloudsCamera.end();
 		
 		ofPushStyle();
 		ofPushMatrix();
@@ -335,6 +332,12 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
 	timeline->draw();
 	
     ofPopStyle();
+}
+
+void CloudsVisualSystem::setupRGBDTransforms(){
+	ofTranslate(0,0,pointcloudOffsetZ);
+	ofScale(pointcloudScale,pointcloudScale,pointcloudScale);
+	ofScale(-1, -1, 1);
 }
 
 void CloudsVisualSystem::exit(ofEventArgs & args)
@@ -2619,10 +2622,6 @@ void CloudsVisualSystem::selfDraw()
     ofSetColor(ofColor(255));
     ofFill();
     mat->end();
-}
-
-void CloudsVisualSystem::selfDrawRGBD(){
-		//draw point cloud
 }
 
 void CloudsVisualSystem::selfDrawOverlay(){
