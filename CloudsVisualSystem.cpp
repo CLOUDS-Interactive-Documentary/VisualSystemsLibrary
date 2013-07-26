@@ -203,7 +203,8 @@ void CloudsVisualSystem::setupSpeaker(string speakerFirstName,
 	
 }
 
-void CloudsVisualSystem::speakerEnded(){
+void CloudsVisualSystem::speakerEnded()
+{
 	hasSpeaker = false;
 }
 
