@@ -225,7 +225,7 @@ class CloudsVisualSystem {
     
 	void setCurrentCamera( ofCamera& cam );
 	void setCurrentCamera( ofCamera* swappedInCam );
-	ofCamera& getCameraRef();
+	virtual ofCamera& getCameraRef();
 	ofCamera* getCurrentCamera();
 	
 	
