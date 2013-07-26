@@ -2350,10 +2350,12 @@ void CloudsVisualSystem::setDrawToScreen( bool state )
 }
 
 void CloudsVisualSystem::loadTestVideo(){
-	getRGBDVideoPlayer().setup(getVisualSystemDataPath() + "TestVideos/TestVideo.mov",
-						  getVisualSystemDataPath() + "TestVideos/TestVideo.xml" );
-	
-	getRGBDVideoPlayer().swapAndPlay();
+	if(ofFile::doesFileExist(getVisualSystemDataPath() + "TestVideo/Jer_TestVideo.mov")){
+		getRGBDVideoPlayer().setup(getVisualSystemDataPath() + "TestVideo/Jer_TestVideo.mov",
+								   getVisualSystemDataPath() + "TestVideo/Jer_TestVideo.xml" );
+		
+		getRGBDVideoPlayer().swapAndPlay();
+	}
 }
 
 float CloudsVisualSystem::getCurrentAudioAmplitude(){
