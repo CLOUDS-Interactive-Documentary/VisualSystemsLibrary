@@ -2225,9 +2225,9 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 	
 	selfPresetLoaded(presetPath);
 	
-	if(bShowTimeline){
+//	if(bShowTimeline){
 		stackGuiWindows();
-	}
+//	}
 }
 
 void CloudsVisualSystem::savePresetGUIS(string presetName)
