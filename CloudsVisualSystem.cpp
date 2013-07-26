@@ -1,9 +1,10 @@
 
 #include "CloudsVisualSystem.h"
-#include "CloudsRGBDCombinedRenderer.h"
+#include "CloudsRGBDVideoPlayer.h"
 
 static ofFbo staticRenderTarget;
 static ofImage sharedCursor;
+static CloudsRGBDVideoPlayer rgbdPlayer;
 
 //default render target is a statically shared FBO
 ofFbo& CloudsVisualSystem::getStaticRenderTarget(){
@@ -17,9 +18,13 @@ ofImage& CloudsVisualSystem::getCursor(){
 	return sharedCursor;
 }
 
+CloudsRGBDVideoPlayer& CloudsVisualSystem::getRGBDVideoPlayer(){
+	return rgbdPlayer;
+}
+
 CloudsVisualSystem::CloudsVisualSystem(){
 	isPlaying = false;
-	sharedRenderer = NULL;
+//	sharedRenderer = NULL;
 	sharedRenderTarget = NULL;
 	bClearBackground = true;
 	bDrawToScreen = true;
@@ -188,9 +193,9 @@ string CloudsVisualSystem::getCurrentTopic(){
 	return currentTopic;
 }
 
-void CloudsVisualSystem::setRenderer(CloudsRGBDCombinedRenderer& newRenderer){
-	sharedRenderer = &newRenderer;
-}
+//void CloudsVisualSystem::setRenderer(CloudsRGBDVideoPlayer& newRenderer){
+//	sharedRenderer = &newRenderer;
+//}
 
 void CloudsVisualSystem::setupSpeaker(string speakerFirstName,
 									  string speakerLastName,

@@ -18,7 +18,7 @@
  * methods for interacting with play time duration, on screen start and stop, and accessing CLOUDS global state
  */
 
-class CloudsRGBDCombinedRenderer;
+class CloudsRGBDVideoPlayer;
 
 enum ofxViewType
 {
@@ -47,6 +47,7 @@ class CloudsVisualSystem {
 	};
 	
 	static ofFbo& getStaticRenderTarget(); //default
+	static CloudsRGBDVideoPlayer& getRGBDVideoPlayer();
 	
 	ofFbo& getSharedRenderTarget();
 	ofImage& getCursor();
@@ -123,7 +124,7 @@ class CloudsVisualSystem {
 	void playSystem();
 	void stopSystem();
 	
-	void setRenderer(CloudsRGBDCombinedRenderer& newRenderer);
+//	void setRenderer(CloudsRGBDVideoPlayer& newRenderer);
 
 	void setupSpeaker(string speakerFirstName,
 					  string speakerLastName,
@@ -341,7 +342,7 @@ class CloudsVisualSystem {
 	
 	//these variables are set by the playback controller when displaying
 	//ways to interact with the pointcloud data
-	CloudsRGBDCombinedRenderer* sharedRenderer;
+//	CloudsRGBDVideoPlayer* sharedRenderer;
 	//set to true if the pointcloud renderer has valid speaker
 	bool hasSpeaker;
 	
