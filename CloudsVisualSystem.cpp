@@ -126,8 +126,7 @@ void CloudsVisualSystem::playSystem(){
 		loadGUIS();
 		hideGUIS();
 //		ofHideCursor();
-		
-		//    showGUIS(); //remove this so the gui doesn't keep popping up
+
 		cam.enableMouseInput();
 		for(map<string, ofxLight *>::iterator it = lights.begin(); it != lights.end(); ++it)
 		{
@@ -135,6 +134,8 @@ void CloudsVisualSystem::playSystem(){
 		}
 		
 		selfBegin();
+		
+		cloudsCamera.setup();
 		
 		timeline->setCurrentFrame(0);
 		if(cameraTrack->getKeyframes().size() > 0){
@@ -149,6 +150,8 @@ void CloudsVisualSystem::stopSystem(){
 	if(isPlaying){
 
 		selfEnd();
+		
+		cloudsCamera.end();
 		
 		hideGUIS();
 		saveGUIS();
@@ -285,6 +288,12 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
         
 		currentCamera->end();
 	  
+		//draw point cloud
+		cloudsCamera.begin();
+		
+		selfDrawRGBD();
+		
+		cloudsCamera.end();
 		
 		ofPushStyle();
 		ofPushMatrix();
@@ -2231,6 +2240,12 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 	
 	selfPresetLoaded(presetPath);
 	
+	if(bTimelineIsIndefinite){
+		timeline->setLoopType(OF_LOOP_NORMAL);
+	}
+	else{
+		timeline->setLoopType(OF_LOOP_NONE);
+	}
 //	if(bShowTimeline){
 		stackGuiWindows();
 //	}
@@ -2589,6 +2604,10 @@ void CloudsVisualSystem::selfDraw()
     ofSetColor(ofColor(255));
     ofFill();
     mat->end();
+}
+
+void CloudsVisualSystem::selfDrawRGBD(){
+		//draw point cloud
 }
 
 void CloudsVisualSystem::selfDrawOverlay(){

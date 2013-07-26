@@ -29,6 +29,13 @@ void CloudsRGBDCamera::setup(){
 	}
 }
 
+void CloudsRGBDCamera::remove(){
+	if(isSetup){
+		isSetup = false;
+		ofRemoveListener(ofEvents().update, this, &CloudsRGBDCamera::update);
+		
+	}
+}
 void CloudsRGBDCamera::update(ofEventArgs& args){
 	setPositionFromMouse();
 }

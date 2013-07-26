@@ -8,7 +8,7 @@ class CloudsRGBDCamera : public ofCamera {
 	CloudsRGBDCamera();
 
 	void setup();
-	
+	void remove(); //removes events
 	void update(ofEventArgs& args);
 	
 	//position/movement params

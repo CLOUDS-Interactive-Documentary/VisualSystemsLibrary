@@ -5,6 +5,7 @@
 #include "ofxTimeline.h"
 #include "ofxUI.h"
 #include "ofxTLCameraTrack.h"
+#include "CloudsRGBDCamera.h"
 
 //tenuous
 #include "ofxLight.h"
@@ -63,6 +64,7 @@ class CloudsVisualSystem {
     virtual void selfDrawDebug();
     virtual void selfSceneTransformation();
     virtual void selfDraw();
+	virtual void selfDrawRGBD();
 	virtual void selfDrawOverlay();
 	virtual void selfPostDraw();
 	virtual void selfPresetLoaded(string presetPath);
@@ -133,7 +135,7 @@ class CloudsVisualSystem {
 	void speakerEnded();
 	
 
-
+	
 	//how much time left to show this visual system?
 	//once seconds is set to zero the end() event will be called by the controller
 	float getSecondsRemaining();
@@ -228,7 +230,7 @@ class CloudsVisualSystem {
 	void setCurrentCamera( ofCamera* swappedInCam );
 	virtual ofCamera& getCameraRef();
 	ofCamera* getCurrentCamera();
-	
+	CloudsRGBDCamera cloudsCamera;
 	
 	//LB
 	ofVec3f getCameraPosition();

@@ -25,21 +25,9 @@ public:
 	bool setup(string videoPath, string calibrationXMLPath, float offsetTime = 0);
 	void swapAndPlay();
 	
-//	void setShaderPath(string _shaderPath);
-//	void reloadShader();
-    
-//	void setSimplification(ofVec2f _simplification);
-	
-    //  Use these to project and draw textured custom geometry
-    //
-//	bool ();
-//	void unbindRenderer();
-    
 	void setupProjectionUniforms(ofShader& shader);
 
-    //  UPDATE
-    //
-    void update(ofEventArgs& args);
+
     
 	//  CYCLE
 	//
@@ -47,13 +35,6 @@ public:
 	bool isPlaying();
 	bool isDone();
 	
-    //  DRAW
-    //
-//    void drawMesh();
-//	void drawPointCloud();
-//	void drawWireFrame();
-//	void draw(ofPolyRenderMode drawMode);
-
 	// UNIMPLEMENTED
 	ofPtr<ofVideoPlayer> getSharedPlayerPtr(){
 		return ofPtr<ofVideoPlayer>( new ofVideoPlayer());
@@ -71,11 +52,6 @@ public:
 	ofVideoPlayer& getPlayer();
 #endif
 	
-//	ofShader& getShader();
-	
-//	// Move in 3D Space
-//    ofVec3f worldPosition;
-//	ofVec3f worldRotation;
 	
 	// Fix extrinsics
 	ofVec3f adjustTranslate;
@@ -91,14 +67,15 @@ public:
     float edgeClip;
 	float farClip;
 	float nearClip;
-
-//    bool bFlipTexture;
-//    bool bMirror;
 	
 	float maxVolume;
   protected:
-    void setTextureScaleForImage(ofBaseHasTexture& _texture);
 
+	//  UPDATE
+    //
+	bool bEventRegistered;
+    void update(ofEventArgs& args);
+	
 #ifdef AVF_PLAYER
 	ofxAVFVideoPlayer currentPlayer;
 	ofxAVFVideoPlayer nextPlayer;
@@ -107,16 +84,6 @@ public:
 	ofVideoPlayer nextPlayer;
 #endif
 	
-	bool bEventRegistered;
-	
-	ofShader shader;
-    string shaderPath;
-    
-	// GEOMETRY
-	//
-    ofVboMesh mesh;
-    ofVec2f simplify;
-    
     //  RGB
     //
 	ofRectangle colorRect;

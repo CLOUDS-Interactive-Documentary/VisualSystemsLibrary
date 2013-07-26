@@ -10,10 +10,6 @@
 
 //---------------------------------------------------------------
 CloudsRGBDVideoPlayer::CloudsRGBDVideoPlayer(){
-
-//	setShaderPath("shaders/rgbdcombined");
-    
-//    simplify.set(0,0);
     
 	nearClip    = 1.0f;
 	edgeClip    = 50.0f;
@@ -25,9 +21,6 @@ CloudsRGBDVideoPlayer::CloudsRGBDVideoPlayer(){
 	
 	bEventRegistered = false;
 	clipPrerolled = false;
-//    bMirror     = false;
-//    bFlipTexture = false;
-//    bRendererBound = false;
 }
 
 //---------------------------------------------------------------
@@ -169,114 +162,7 @@ void CloudsRGBDVideoPlayer::swapAndPlay(){
 
 }
 
-//void CloudsRGBDVideoPlayer::setShaderPath(string _shaderPath){
-//    shaderPath = _shaderPath;
-//	reloadShader();
-//}
-
-//void CloudsRGBDVideoPlayer::setSimplification(ofVec2f _simplification){
-//	
-//	if(simplify == _simplification){
-//		return;
-//	}
-//	
-//	if(_simplification.x <= 0  || _simplification.y <= 0){
-//		return;
-//	}
-//	
-//	simplify = _simplification;
-
-/*
-	mesh.clearIndices();
-	int x = 0;
-	int y = 0;
-	
-	int gw = ceil(depthRect.width / simplify.x);
-	int w = gw*simplify.x;
-	int h = depthRect.height;
-	
-	for (float ystep = 0; ystep < h-simplify.y; ystep += simplify.y){
-		for (float xstep = 0; xstep < w-simplify.x; xstep += simplify.x){
-			ofIndexType a,b,c;
-			
-			a = x+y*gw;
-			b = (x+1)+y*gw;
-			c = x+(y+1)*gw;
-			mesh.addIndex(a);
-			mesh.addIndex(b);
-			mesh.addIndex(c);
-            
-			a = (x+1)+(y+1)*gw;
-			b = x+(y+1)*gw;
-			c = (x+1)+(y)*gw;
-			mesh.addIndex(a);
-			mesh.addIndex(b);
-			mesh.addIndex(c);
-			
-			x++;
-		}
-		
-		y++;
-		x = 0;
-	}
-	
-    mesh.clearColors();
-    mesh.clearNormals();
-    mesh.clearVertices();
-    mesh.clearTexCoords();
-	for (float y = 0; y < depthRect.height; y += simplify.y){
-		for (float x = 0; x < depthRect.width; x += simplify.x){
-            mesh.addColor(ofFloatColor(1.0,1.0,1.0,1.0));
-            mesh.addVertex( ofVec3f(x, y,0));
-            mesh.addTexCoord(ofVec2f(x,y));
-		}
-	}
-    
-	bMeshGenerated = true;
-*/
-	
-//	if(bRendererBound){
-//		shader.setUniform2f("simplify", simplify.x,simplify.y);
-//	}
-//}
-
-//void CloudsRGBDVideoPlayer::reloadShader(){
-//	shader.load( shaderPath );
-//}
-
-//--------------------------------------------------------------- BINDERS
-//bool CloudsRGBDVideoPlayer::bindRenderer(){
-//    ofPushMatrix();
-//	
-//	ofScale(1, -1, 1);
-//	if(!bMirror){
-//		ofScale(-1, 1, 1);
-//	}
-//	
-//	ofRotate(worldRotation.x,1,0,0);
-//	ofRotate(worldRotation.y,0,1,0);
-//	ofRotate(worldRotation.z,0,0,1);
-//    
-//	shader.begin();
-//    
-//	setupProjectionUniforms();
-//	
-//	bRendererBound = true;
-//	return true;
-//}
-
-//void CloudsRGBDVideoPlayer::unbindRenderer(){
-//    if(!bRendererBound){
-//		ofLogError("ofxRGBDGPURenderer::unbindRenderer -- called without renderer bound");
-//	 	return;
-//	}
-//	
-//	shader.end();
-//	bRendererBound = false;
-//    
-//	ofPopMatrix();
-//}
-
+//--------------------------------------------------------------- ACTIONS
 void CloudsRGBDVideoPlayer::setupProjectionUniforms(ofShader& shader){
     
 	if(!getPlayer().isLoaded()){
@@ -312,18 +198,13 @@ void CloudsRGBDVideoPlayer::setupProjectionUniforms(ofShader& shader){
 
 	shader.setUniform1i("useFaces", useFaces ? 1 : 0);
 	shader.setUniform1f("flowPosition", flowPosition);
-    shader.setUniform2f("simplify", simplify.x,simplify.y);
+//    shader.setUniform2f("simplify", simplify.x,simplify.y);
 	shader.setUniform1f("farClip", farClip);
     shader.setUniform1f("nearClip", nearClip);
 	shader.setUniform1f("edgeClip", edgeClip);
 
 	shader.setUniform1f("minDepth", minDepth);
     shader.setUniform1f("maxDepth", maxDepth);
-
-    //    cout << ( farClip - nearClip ) + nearClip << endl;
-    //    cout << "FarClip: " << farClip << endl;
-    //    cout << "nearClip: " << nearClip << endl;
-    //    cout << "edgeClip: " << edgeClip << endl;
 
 }
 
@@ -336,11 +217,6 @@ ofVideoPlayer& CloudsRGBDVideoPlayer::getPlayer(){
 	return currentPlayer;
 }
 
-////--------------------------------------------------------------- ACTIONS
-//ofShader& CloudsRGBDVideoPlayer::getShader(){
-//	return shader;
-//}
-
 //--------------------------------------------------------------- ACTIONS
 void CloudsRGBDVideoPlayer::update(ofEventArgs& args){
 
@@ -348,8 +224,8 @@ void CloudsRGBDVideoPlayer::update(ofEventArgs& args){
 	if(clipPrerolled){
 		nextPlayer.update();
 	}
+	
 	float audioVolume = 1.0;
-
 #ifdef AVF_PLAYER
 	float position = getPlayer().getPositionInSeconds();
 	float duration = getPlayer().getDuration();
@@ -385,29 +261,3 @@ bool CloudsRGBDVideoPlayer::isPlaying(){
 bool CloudsRGBDVideoPlayer::isDone(){
 	return getPlayer().isLoaded() && !getPlayer().isPlaying();
 }
-
-//void CloudsRGBDVideoPlayer::drawMesh(){
-//	draw(OF_MESH_FILL);
-//}
-//void CloudsRGBDVideoPlayer::drawPointCloud(){
-//	draw(OF_MESH_POINTS);
-//}
-//void CloudsRGBDVideoPlayer::drawWireFrame(){
-//	draw(OF_MESH_WIREFRAME);
-//}
-//
-//void CloudsRGBDVideoPlayer::draw(ofPolyRenderMode drawMode){
-//    if(bindRenderer()){
-//		
-//		switch(drawMode){
-//			case OF_MESH_POINTS:
-//				mesh.drawVertices(); break;
-//			case OF_MESH_WIREFRAME:
-//				mesh.drawWireframe(); break;
-//			case OF_MESH_FILL:
-//				mesh.drawFaces(); break;
-//		}
-//		
-//		unbindRenderer();
-//	}
-//}
