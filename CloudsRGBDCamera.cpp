@@ -38,6 +38,26 @@ void CloudsRGBDCamera::remove(){
 
 void CloudsRGBDCamera::update(ofEventArgs& args){
 	setPositionFromMouse();
+	
+	if( targetNode != NULL && startNode != NULL ){
+		
+		cout << " transitioning" << endl;
+		
+		//update transition
+		float t = transitionAmount;
+		
+		ofQuaternion rotQuat;
+		rotQuat.slerp( t, startNode->getOrientationQuat(), targetNode->getOrientationQuat() );
+		
+		
+		setOrientation( ofQuaternion() );
+		setPosition( targetNode->getPosition()*t + startNode->getPosition()*(1.-t) );
+		setOrientation( rotQuat );
+	}
+	else{
+		setPosition( mouseBasedNode.getPosition() );
+		setOrientation( mouseBasedNode.getOrientationQuat() );
+	}
 }
 
 void CloudsRGBDCamera::setPositionFromMouse(){
@@ -62,6 +82,21 @@ void CloudsRGBDCamera::setPositionFromMouse(){
 	currentPosition += (targetPosition - currentPosition) * damp;
 	
 	currentLookTarget = lookTarget - ofVec3f(0,dropAmount,0);
-	setPosition(currentPosition);
-	lookAt(currentLookTarget);
+	
+	mouseBasedNode.setPosition(currentPosition);
+	mouseBasedNode.lookAt(currentLookTarget);
+}
+
+void CloudsRGBDCamera::setTransitionStartNode( ofNode* _startNode ){
+	
+	cout << "CloudsRGBDCamera::setStartNode: " << endl;
+	startNode = _startNode;
+}
+void CloudsRGBDCamera::setTransitionTargetNode( ofNode* _targetNode ){
+	cout << "CloudsRGBDCamera::setTargetNode: " << endl;
+	targetNode = _targetNode;
+}
+
+void CloudsRGBDCamera::setTransitionPercent( float t ){
+	transitionAmount = t;
 }

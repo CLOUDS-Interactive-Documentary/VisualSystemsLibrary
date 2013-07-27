@@ -29,14 +29,31 @@ class CloudsRGBDCamera : public ofCamera {
 	ofVec3f driftPos;
 	float driftRadius;
 	
-	//up vector drift
+	void setTransitionStartNode( ofNode* _startNode );
+	void setTransitionTargetNode( ofNode* _targetNode );
+	void setTransitionPercent( float t );
 	
+	//up vector drift
+	ofVec3f startPos;
+	ofQuaternion startQuat;
+	
+	
+	ofNode* startNode;
+	ofNode* targetNode;
+	ofNode mouseBasedNode;
   protected:
 	ofVec3f currentPosition;
 	ofVec3f currentLookTarget;
+	ofNode startTransform;
+	
 	
 	void setPositionFromMouse();
 	
 	bool isSetup;
 	bool isHovering;
+	
+	float transitionAmount;
+	bool transitioning;
+	
+	
 };

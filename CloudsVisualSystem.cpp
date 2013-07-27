@@ -239,8 +239,8 @@ void CloudsVisualSystem::update(ofEventArgs & args)
 		//update pointcloud stuff
 		
 		//update camera
-		translatedHeadPosition = getRGBDVideoPlayer().headPosition * pointcloudScale + ofVec3f(0,0,pointcloudOffsetZ) + positionOffset;
-		cloudsCamera.lookTarget = translatedHeadPosition + positionOffset;
+	  translatedHeadPosition = getRGBDVideoPlayer().headPosition * pointcloudScale + ofVec3f(0,0,pointcloudOffsetZ);// + positionOffset;
+	  cloudsCamera.lookTarget = translatedHeadPosition;// + positionOffset;
 		//LB: I added our positionOffset to the cloudsCamera positioning stuff above. Is there a better way to do this?
 		
         selfUpdate();
