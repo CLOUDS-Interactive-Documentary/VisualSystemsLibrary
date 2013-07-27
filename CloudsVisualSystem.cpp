@@ -24,6 +24,7 @@ CloudsRGBDVideoPlayer& CloudsVisualSystem::getRGBDVideoPlayer(){
 
 CloudsVisualSystem::CloudsVisualSystem(){
 	isPlaying = false;
+	timeline = NULL;
 //	sharedRenderer = NULL;
 	sharedRenderTarget = NULL;
 	bClearBackground = true;
@@ -31,7 +32,6 @@ CloudsVisualSystem::CloudsVisualSystem(){
 	bUseCameraTrack = false;
 	cameraTrack = NULL;
 	pointcloudScale = .25;
-	
 }
 
 CloudsVisualSystem::~CloudsVisualSystem(){
@@ -335,7 +335,9 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
 //		ofPopStyle();
 	}
     
-	timeline->draw();
+	if(timeline != NULL){
+		timeline->draw();
+	}
 	
     ofPopStyle();
 }
@@ -691,6 +693,7 @@ void CloudsVisualSystem::setupMaterialParams()
 
 void CloudsVisualSystem::setupTimeLineParams()
 {
+	timeline = NULL;
     bShowTimeline = false;
 	bTimelineIsIndefinite = true;
     bDeleteTimelineTrack = false;
@@ -1516,7 +1519,8 @@ void CloudsVisualSystem::setupTimeline()
         delete timeline;
         timeline = NULL;
     }
-    timeline = new ofxTimeline();
+	
+	timeline = new ofxTimeline();
 	timeline->setName("Working");
 	timeline->setWorkingFolder(getVisualSystemDataPath()+"Presets/Working/Timeline/");
 	
