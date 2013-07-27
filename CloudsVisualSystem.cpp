@@ -31,7 +31,7 @@ CloudsVisualSystem::CloudsVisualSystem(){
 	bUseCameraTrack = false;
 	cameraTrack = NULL;
 	pointcloudScale = .25;
-	
+	timeline = NULL;
 }
 
 CloudsVisualSystem::~CloudsVisualSystem(){
@@ -1504,12 +1504,13 @@ void CloudsVisualSystem::guiLightEvent(ofxUIEventArgs &e)
 
 void CloudsVisualSystem::setupTimeline()
 {
-    if(timeline != NULL)
+    if(timeline == NULL)
     {
-        delete timeline;
-        timeline = NULL;
+//        delete timeline;
+        
+		timeline = new ofxTimeline();
     }
-    timeline = new ofxTimeline();
+  
 	timeline->setName("Working");
 	timeline->setWorkingFolder(getVisualSystemDataPath()+"Presets/Working/Timeline/");
 	
