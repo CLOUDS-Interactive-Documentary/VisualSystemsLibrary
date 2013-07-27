@@ -1504,7 +1504,11 @@ void CloudsVisualSystem::guiLightEvent(ofxUIEventArgs &e)
 
 void CloudsVisualSystem::setupTimeline()
 {
-
+    if(timeline != NULL)
+    {
+        delete timeline;
+        timeline = NULL;
+    }
     timeline = new ofxTimeline();
 	timeline->setName("Working");
 	timeline->setWorkingFolder(getVisualSystemDataPath()+"Presets/Working/Timeline/");
@@ -1546,11 +1550,8 @@ void CloudsVisualSystem::resetTimeline()
     timeline->reset();
     cameraTrack->disable();
 	cameraTrack->lockCameraToTrack = false;
-    delete timeline;
-    timeline = NULL;
 	delete cameraTrack;
 	cameraTrack = NULL;
-    timeline->setPageName(ofToUpper(getSystemName()));
     setupTimeline();
 }
 
