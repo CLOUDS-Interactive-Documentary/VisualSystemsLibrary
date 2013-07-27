@@ -1546,6 +1546,8 @@ void CloudsVisualSystem::resetTimeline()
     timeline->reset();
     cameraTrack->disable();
 	cameraTrack->lockCameraToTrack = false;
+    delete timeline;
+    timeline = NULL;
 	delete cameraTrack;
 	cameraTrack = NULL;
     timeline->setPageName(ofToUpper(getSystemName()));
