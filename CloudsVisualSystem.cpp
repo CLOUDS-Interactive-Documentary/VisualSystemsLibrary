@@ -61,7 +61,11 @@ string CloudsVisualSystem::getVisualSystemDataPath(){
     string path = "../../../data/";
     
     if (NotStandALoneFolder)
+    {
         path = "../../../CloudsLibrary/src/VisualSystems/"+ getSystemName() +"/bin/data/" ;
+        cout << "it does exist" << endl; 
+    }
+    
     
     
     return path;
@@ -1080,9 +1084,12 @@ void CloudsVisualSystem::setupCameraGui()
     views.push_back("RIGHT");
     views.push_back("LEFT");
     views.push_back("3D");
+    views.push_back("DISABLE");
+    
     ofxUIDropDownList *ddl = camGui->addDropDownList("VIEW", views);
     ddl->setAutoClose(false);
     ddl->setShowCurrentSelected(true);
+    ddl->activateToggle("DISABLE"); 
     
     camGui->autoSizeToFitWidgets();
     ofAddListener(camGui->newGUIEvent,this,&CloudsVisualSystem::guiCameraEvent);
