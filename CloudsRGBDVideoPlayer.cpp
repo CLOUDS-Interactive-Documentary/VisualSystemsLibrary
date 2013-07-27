@@ -160,7 +160,7 @@ void CloudsRGBDVideoPlayer::swapAndPlay(){
 	swap(currentPlayer,nextPlayer);
 	clipPrerolled = false;
 	
-	cout << "swapped and played clip " << endl;
+//	cout << "swapped and played clip " << endl;
 
 }
 
@@ -172,7 +172,7 @@ void CloudsRGBDVideoPlayer::setupProjectionUniforms(ofShader& shader){
 		return;
 	}
 	
-    shader.setUniformTexture("texture", getPlayer().getTextureReference(), 0);
+    shader.setUniformTexture("rgbdTexture", getPlayer().getTextureReference(), 0);
     shader.setUniform2f("textureSize",  getPlayer().getWidth(), getPlayer().getHeight());
     
     shader.setUniform4f("colorRect", colorRect.x, colorRect.y, colorRect.width, colorRect.height);
@@ -221,7 +221,8 @@ ofVideoPlayer& CloudsRGBDVideoPlayer::getPlayer(){
 
 //--------------------------------------------------------------- ACTIONS
 void CloudsRGBDVideoPlayer::update(ofEventArgs& args){
-
+	
+	
 	currentPlayer.update();
 	if(clipPrerolled){
 		nextPlayer.update();
@@ -239,14 +240,10 @@ void CloudsRGBDVideoPlayer::update(ofEventArgs& args){
 	//cout << "position is " << position << " " << duration << " duration " << endl;
 	
 	if(position < 1.0){
-
 		audioVolume = ofMap(position, .8, 1.0, 0., maxVolume, true);
-
 	}
 	else if(position > duration - 1.0){
-
 		audioVolume = ofMap(position, duration - 1.0, duration - .8, maxVolume, 0.0, true);
-
 	}
 
 	getPlayer().setVolume(audioVolume);
