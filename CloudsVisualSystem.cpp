@@ -63,10 +63,8 @@ string CloudsVisualSystem::getVisualSystemDataPath(){
     if (NotStandALoneFolder)
     {
         path = "../../../CloudsLibrary/src/VisualSystems/"+ getSystemName() +"/bin/data/" ;
-        cout << "it does exist" << endl; 
+//        cout << "it does exist" << endl;
     }
-    
-    
     
     return path;
 }
@@ -1070,7 +1068,7 @@ void CloudsVisualSystem::setupCameraGui()
     camGui->addSlider("ROT-Z", 0, 360.0, zRot->getPosPtr())->setIncrement(1.0);
     camGui->addLabel("TRACK");
     camGui->addButton("ADD KEYFRAME", false);
-    camGui->addToggle("LOCK TO TRACK", cameraTrack->lockCameraToTrack);
+    camGui->addToggle("LOCK TO TRACK", &cameraTrack->lockCameraToTrack);
 	vector<string> transitions;
 	transitions.push_back("2D");
 	transitions.push_back("3D FLY THROUGH");
