@@ -24,6 +24,7 @@ CloudsRGBDVideoPlayer& CloudsVisualSystem::getRGBDVideoPlayer(){
 
 CloudsVisualSystem::CloudsVisualSystem(){
 	isPlaying = false;
+	timeline = NULL;
 //	sharedRenderer = NULL;
 	sharedRenderTarget = NULL;
 	bClearBackground = true;
@@ -31,7 +32,6 @@ CloudsVisualSystem::CloudsVisualSystem(){
 	bUseCameraTrack = false;
 	cameraTrack = NULL;
 	pointcloudScale = .25;
-	
 }
 
 CloudsVisualSystem::~CloudsVisualSystem(){
@@ -61,8 +61,10 @@ string CloudsVisualSystem::getVisualSystemDataPath(){
     string path = "../../../data/";
     
     if (NotStandALoneFolder)
+    {
         path = "../../../CloudsLibrary/src/VisualSystems/"+ getSystemName() +"/bin/data/" ;
-    
+//        cout << "it does exist" << endl;
+    }
     
     return path;
 }
@@ -332,7 +334,9 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
 //		ofPopStyle();
 	}
     
-	timeline->draw();
+	if(timeline != NULL){
+		timeline->draw();
+	}
 	
     ofPopStyle();
 }
@@ -688,6 +692,7 @@ void CloudsVisualSystem::setupMaterialParams()
 
 void CloudsVisualSystem::setupTimeLineParams()
 {
+	timeline = NULL;
     bShowTimeline = false;
 	bTimelineIsIndefinite = true;
     bDeleteTimelineTrack = false;
@@ -1064,7 +1069,7 @@ void CloudsVisualSystem::setupCameraGui()
     camGui->addSlider("ROT-Z", 0, 360.0, zRot->getPosPtr())->setIncrement(1.0);
     camGui->addLabel("TRACK");
     camGui->addButton("ADD KEYFRAME", false);
-    camGui->addToggle("LOCK TO TRACK", cameraTrack->lockCameraToTrack);
+    camGui->addToggle("LOCK TO TRACK", &cameraTrack->lockCameraToTrack);
 	vector<string> transitions;
 	transitions.push_back("2D");
 	transitions.push_back("3D FLY THROUGH");
@@ -1081,9 +1086,12 @@ void CloudsVisualSystem::setupCameraGui()
     views.push_back("RIGHT");
     views.push_back("LEFT");
     views.push_back("3D");
+    views.push_back("DISABLE");
+    
     ofxUIDropDownList *ddl = camGui->addDropDownList("VIEW", views);
     ddl->setAutoClose(false);
     ddl->setShowCurrentSelected(true);
+    ddl->activateToggle("DISABLE");
 	
 	selfSetupCameraGui();
     
@@ -1509,8 +1517,13 @@ void CloudsVisualSystem::guiLightEvent(ofxUIEventArgs &e)
 
 void CloudsVisualSystem::setupTimeline()
 {
-
-    timeline = new ofxTimeline();
+    if(timeline != NULL)
+    {
+        delete timeline;
+        timeline = NULL;
+    }
+	
+	timeline = new ofxTimeline();
 	timeline->setName("Working");
 	timeline->setWorkingFolder(getVisualSystemDataPath()+"Presets/Working/Timeline/");
 	
@@ -1553,7 +1566,6 @@ void CloudsVisualSystem::resetTimeline()
 	cameraTrack->lockCameraToTrack = false;
 	delete cameraTrack;
 	cameraTrack = NULL;
-    timeline->setPageName(ofToUpper(getSystemName()));
     setupTimeline();
 }
 
