@@ -34,8 +34,8 @@ class ofxLight
 public:    
     ofxLight()
     {
-        bEnabled = true; 
-        light.setup();
+//        bEnabled = true;
+//        light.setup();
         lightPos.set(0.0f,0.0f,0.0f);
         lightOrientation.set(0.0f,0.0f,0.0f);
         lightAmbient = ofFloatColor(.5f,.5f,.5f,1.f);

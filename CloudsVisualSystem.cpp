@@ -116,7 +116,7 @@ void CloudsVisualSystem::setup(){
 void CloudsVisualSystem::playSystem(){
 
 	if(!isPlaying){
-		
+		cout << "**** PLAYING " << getSystemName() << endl;
 		ofRegisterMouseEvents(this);
 		ofRegisterKeyEvents(this);
 		ofAddListener(ofEvents().update, this, &CloudsVisualSystem::update);
@@ -149,6 +149,7 @@ void CloudsVisualSystem::playSystem(){
 
 void CloudsVisualSystem::stopSystem(){
 	if(isPlaying){
+		cout << "**** STOPPING " << getSystemName() << endl;
 
 		selfEnd();
 		
@@ -1083,11 +1084,15 @@ void CloudsVisualSystem::setupCameraGui()
     ofxUIDropDownList *ddl = camGui->addDropDownList("VIEW", views);
     ddl->setAutoClose(false);
     ddl->setShowCurrentSelected(true);
+	
+	selfSetupCameraGui();
     
     camGui->autoSizeToFitWidgets();
     ofAddListener(camGui->newGUIEvent,this,&CloudsVisualSystem::guiCameraEvent);
     guis.push_back(camGui);
     guimap[camGui->getName()] = camGui;
+	
+
 }
 
 CloudsVisualSystem::RGBDTransitionType CloudsVisualSystem::getTransitionType()
@@ -2257,9 +2262,7 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 
 	timeline->setDurationInSeconds(timelineDuration);
 	timelineDuration = timeline->getDurationInSeconds();
-	
-	selfPresetLoaded(presetPath);
-	
+		
 	if(bTimelineIsIndefinite){
 		timeline->setLoopType(OF_LOOP_NORMAL);
 	}
@@ -2267,8 +2270,9 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 		timeline->setLoopType(OF_LOOP_NONE);
 	}
 //	if(bShowTimeline){
-		stackGuiWindows();
+	stackGuiWindows();
 //	}
+	selfPresetLoaded(presetPath);
 }
 
 void CloudsVisualSystem::savePresetGUIS(string presetName)
@@ -2704,6 +2708,11 @@ void CloudsVisualSystem::selfSetupRenderGui()
 void CloudsVisualSystem::guiRenderEvent(ofxUIEventArgs &e)
 {
     
+}
+
+void CloudsVisualSystem::selfSetupCameraGui()
+{
+	
 }
 
 void CloudsVisualSystem::selfSetupTimeline()

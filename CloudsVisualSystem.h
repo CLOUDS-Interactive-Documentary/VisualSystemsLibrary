@@ -88,7 +88,11 @@ class CloudsVisualSystem {
 	
     virtual void selfSetupRenderGui();
     virtual void guiRenderEvent(ofxUIEventArgs &e);
-    
+
+	virtual void selfSetupCameraGui();
+    virtual void guiCameraEvent(ofxUIEventArgs &e);
+
+
     virtual void selfSetupTimeline();
     virtual void selfSetupTimelineGui();
     virtual void selfTimelineGuiEvent(ofxUIEventArgs &e);
@@ -184,7 +188,6 @@ class CloudsVisualSystem {
     void guiLightingEvent(ofxUIEventArgs &e);
     
     void setupCameraGui();
-    void guiCameraEvent(ofxUIEventArgs &e);
 	
 	void setupPresetGui();
 	void guiPresetEvent(ofxUIEventArgs &e);
@@ -199,7 +202,8 @@ class CloudsVisualSystem {
     void guiLightEvent(ofxUIEventArgs &e);
 	
     void setupTimeline();
-    void timelineBangEvent(ofxTLBangEventArgs& args);
+	//override with caution, you still need to always call this when a bang occurs
+    virtual void timelineBangEvent(ofxTLBangEventArgs& args);
     void setupTimelineGui();
     void guiTimelineEvent(ofxUIEventArgs &e);
     void setTimelineTrackCreation(bool state);
