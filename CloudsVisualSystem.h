@@ -53,7 +53,7 @@ class CloudsVisualSystem {
 	ofFbo& getSharedRenderTarget();
 	ofImage& getCursor();
 	
-	//ofFbo* sharedRenderTarget;
+
 	
 	//SUB CLASSES USE THESE METHODS:
     virtual void selfSetup();
@@ -101,7 +101,7 @@ class CloudsVisualSystem {
 	virtual string getSystemName();
 	
 	void setupRGBDTransforms();
-	
+
 	//Data Folder Path
     string getVisualSystemDataPath();
 	ofxTimeline* getTimeline();
@@ -131,6 +131,8 @@ class CloudsVisualSystem {
 	void playSystem();
 	void stopSystem();
 	
+	bool isSetup();
+
 //	void setRenderer(CloudsRGBDVideoPlayer& newRenderer);
 
 	void setupSpeaker(string speakerFirstName,
@@ -298,7 +300,8 @@ class CloudsVisualSystem {
     ofMaterial *mat;
     map<string, ofMaterial *> materials;
     map<string, ofxUISuperCanvas *> materialGuis;
-	
+
+	bool bIsSetup;
     //LIGHTING
     float *globalAmbientColor;
     bool bSmoothLighting;
@@ -358,6 +361,7 @@ class CloudsVisualSystem {
 	CloudsRGBDVideoPlayer* sharedRenderer;
 	//set to true if the pointcloud renderer has valid speaker
 	bool hasSpeaker;
+	
 	
 	//speaker and quote info, constantly updated
 	string speakerFirstName;

@@ -26,7 +26,7 @@ CloudsVisualSystem::CloudsVisualSystem(){
 	isPlaying = false;
 	timeline = NULL;
 	sharedRenderer = NULL;
-//	sharedRenderTarget = NULL;
+	bIsSetup = false;
 	bClearBackground = true;
 	bDrawToScreen = true;
 	bUseCameraTrack = false;
@@ -80,6 +80,10 @@ ofxTimeline* CloudsVisualSystem::getTimeline(){
 
 void CloudsVisualSystem::setup(){
 	
+	if(bIsSetup){
+		return;
+	}
+	
 	cout << "SETTING UP SYSTEM " << getSystemName() << endl;
 	
 	ofAddListener(ofEvents().exit, this, &CloudsVisualSystem::exit);
@@ -113,6 +117,8 @@ void CloudsVisualSystem::setup(){
     setupTimelineGui();
     
 	hideGUIS();
+	
+	bIsSetup = true;
 	
 }
 
@@ -302,16 +308,6 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
         lightsEnd();
         
 		getCameraRef().end();
-	  
-		//draw point cloud
-//		cloudsCamera.begin();
-//		ofPushMatrix();
-//		//move the pointcloud
-//
-//		selfDrawRGBD();
-//		ofPopMatrix();
-//		
-//		cloudsCamera.end();
 		
 		ofPushStyle();
 		ofPushMatrix();
