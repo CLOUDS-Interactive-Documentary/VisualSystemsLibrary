@@ -41,7 +41,7 @@ void CloudsRGBDCamera::update(ofEventArgs& args){
 	
 	if( targetNode != NULL && startNode != NULL ){
 		
-		cout << " transitioning" << endl;
+		//cout << " transitioning" << endl;
 		
 		//update transition
 		float t = transitionAmount;
@@ -88,7 +88,6 @@ void CloudsRGBDCamera::setPositionFromMouse(){
 }
 
 void CloudsRGBDCamera::setTransitionStartNode( ofNode* _startNode ){
-	
 	cout << "CloudsRGBDCamera::setStartNode: " << endl;
 	startNode = _startNode;
 }

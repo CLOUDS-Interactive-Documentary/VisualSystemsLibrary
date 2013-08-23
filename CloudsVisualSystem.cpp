@@ -25,8 +25,8 @@ CloudsRGBDVideoPlayer& CloudsVisualSystem::getRGBDVideoPlayer(){
 CloudsVisualSystem::CloudsVisualSystem(){
 	isPlaying = false;
 	timeline = NULL;
-//	sharedRenderer = NULL;
-	sharedRenderTarget = NULL;
+	sharedRenderer = NULL;
+//	sharedRenderTarget = NULL;
 	bClearBackground = true;
 	bDrawToScreen = true;
 	bUseCameraTrack = false;
@@ -40,7 +40,8 @@ CloudsVisualSystem::~CloudsVisualSystem(){
 
 ofFbo& CloudsVisualSystem::getSharedRenderTarget(){
 	
-	ofFbo& renderTarget = sharedRenderTarget != NULL ? *sharedRenderTarget : getStaticRenderTarget();
+	//ofFbo& renderTarget = sharedRenderTarget != NULL ? *sharedRenderTarget : getStaticRenderTarget();
+	ofFbo& renderTarget = getStaticRenderTarget();
 	
     if(!renderTarget.isAllocated() ||
        renderTarget.getWidth() != ofGetWidth() ||

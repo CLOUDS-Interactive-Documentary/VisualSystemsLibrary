@@ -53,7 +53,7 @@ class CloudsVisualSystem {
 	ofFbo& getSharedRenderTarget();
 	ofImage& getCursor();
 	
-	ofFbo* sharedRenderTarget;
+	//ofFbo* sharedRenderTarget;
 	
 	//SUB CLASSES USE THESE METHODS:
     virtual void selfSetup();
@@ -355,7 +355,7 @@ class CloudsVisualSystem {
 	
 	//these variables are set by the playback controller when displaying
 	//ways to interact with the pointcloud data
-//	CloudsRGBDVideoPlayer* sharedRenderer;
+	CloudsRGBDVideoPlayer* sharedRenderer;
 	//set to true if the pointcloud renderer has valid speaker
 	bool hasSpeaker;
 	
