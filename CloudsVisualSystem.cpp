@@ -335,7 +335,10 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
 //		ofPopStyle();
 	}
     
-	if(timeline != NULL){
+	if(timeline != NULL && timeline->getIsShowing())
+    {
+        ofSetColor(gui->getColorBack());
+        ofRect(timeline->getDrawRect()); 
 		timeline->draw();
 	}
 	
@@ -1748,6 +1751,8 @@ void CloudsVisualSystem::bindWidgetToTimeline(ofxUIWidget* widget)
 {
     string parentName = ((ofxUISuperCanvas *) widget->getCanvasParent())->getCanvasTitle()->getLabel();
     timeline->addPage(parentName, true);
+    
+    timeline->setCurrentPage(parentName);
     
     vector<ofxTLPage *> pages = timeline->getPages();
     
