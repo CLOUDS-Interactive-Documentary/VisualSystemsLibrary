@@ -53,7 +53,7 @@ class CloudsVisualSystem {
 	ofFbo& getSharedRenderTarget();
 	ofImage& getCursor();
 	
-	ofFbo* sharedRenderTarget;
+
 	
 	//SUB CLASSES USE THESE METHODS:
     virtual void selfSetup();
@@ -88,7 +88,11 @@ class CloudsVisualSystem {
 	
     virtual void selfSetupRenderGui();
     virtual void guiRenderEvent(ofxUIEventArgs &e);
-    
+
+	virtual void selfSetupCameraGui();
+    virtual void guiCameraEvent(ofxUIEventArgs &e);
+
+
     virtual void selfSetupTimeline();
     virtual void selfSetupTimelineGui();
     virtual void selfTimelineGuiEvent(ofxUIEventArgs &e);
@@ -97,7 +101,7 @@ class CloudsVisualSystem {
 	virtual string getSystemName();
 	
 	void setupRGBDTransforms();
-	
+
 	//Data Folder Path
     string getVisualSystemDataPath();
 	ofxTimeline* getTimeline();
@@ -127,6 +131,8 @@ class CloudsVisualSystem {
 	void playSystem();
 	void stopSystem();
 	
+	bool isSetup();
+
 //	void setRenderer(CloudsRGBDVideoPlayer& newRenderer);
 
 	void setupSpeaker(string speakerFirstName,
@@ -184,7 +190,6 @@ class CloudsVisualSystem {
     void guiLightingEvent(ofxUIEventArgs &e);
     
     void setupCameraGui();
-    void guiCameraEvent(ofxUIEventArgs &e);
 	
 	void setupPresetGui();
 	void guiPresetEvent(ofxUIEventArgs &e);
@@ -199,7 +204,8 @@ class CloudsVisualSystem {
     void guiLightEvent(ofxUIEventArgs &e);
 	
     void setupTimeline();
-    void timelineBangEvent(ofxTLBangEventArgs& args);
+	//override with caution, you still need to always call this when a bang occurs
+    virtual void timelineBangEvent(ofxTLBangEventArgs& args);
     void setupTimelineGui();
     void guiTimelineEvent(ofxUIEventArgs &e);
     void setTimelineTrackCreation(bool state);
@@ -294,7 +300,8 @@ class CloudsVisualSystem {
     ofMaterial *mat;
     map<string, ofMaterial *> materials;
     map<string, ofxUISuperCanvas *> materialGuis;
-	
+
+	bool bIsSetup;
     //LIGHTING
     float *globalAmbientColor;
     bool bSmoothLighting;
@@ -351,9 +358,10 @@ class CloudsVisualSystem {
 	
 	//these variables are set by the playback controller when displaying
 	//ways to interact with the pointcloud data
-//	CloudsRGBDVideoPlayer* sharedRenderer;
+	CloudsRGBDVideoPlayer* sharedRenderer;
 	//set to true if the pointcloud renderer has valid speaker
 	bool hasSpeaker;
+	
 	
 	//speaker and quote info, constantly updated
 	string speakerFirstName;

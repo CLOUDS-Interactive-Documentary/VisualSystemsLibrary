@@ -25,8 +25,8 @@ CloudsRGBDVideoPlayer& CloudsVisualSystem::getRGBDVideoPlayer(){
 CloudsVisualSystem::CloudsVisualSystem(){
 	isPlaying = false;
 	timeline = NULL;
-//	sharedRenderer = NULL;
-	sharedRenderTarget = NULL;
+	sharedRenderer = NULL;
+	bIsSetup = false;
 	bClearBackground = true;
 	bDrawToScreen = true;
 	bUseCameraTrack = false;
@@ -40,7 +40,8 @@ CloudsVisualSystem::~CloudsVisualSystem(){
 
 ofFbo& CloudsVisualSystem::getSharedRenderTarget(){
 	
-	ofFbo& renderTarget = sharedRenderTarget != NULL ? *sharedRenderTarget : getStaticRenderTarget();
+	//ofFbo& renderTarget = sharedRenderTarget != NULL ? *sharedRenderTarget : getStaticRenderTarget();
+	ofFbo& renderTarget = getStaticRenderTarget();
 	
     if(!renderTarget.isAllocated() ||
        renderTarget.getWidth() != ofGetWidth() ||
@@ -63,10 +64,8 @@ string CloudsVisualSystem::getVisualSystemDataPath(){
     if (NotStandALoneFolder)
     {
         path = "../../../CloudsLibrary/src/VisualSystems/"+ getSystemName() +"/bin/data/" ;
-        cout << "it does exist" << endl; 
+//        cout << "it does exist" << endl;
     }
-    
-    
     
     return path;
 }
@@ -80,6 +79,10 @@ ofxTimeline* CloudsVisualSystem::getTimeline(){
 }
 
 void CloudsVisualSystem::setup(){
+	
+	if(bIsSetup){
+		return;
+	}
 	
 	cout << "SETTING UP SYSTEM " << getSystemName() << endl;
 	
@@ -115,12 +118,14 @@ void CloudsVisualSystem::setup(){
     
 	hideGUIS();
 	
+	bIsSetup = true;
+	
 }
 
 void CloudsVisualSystem::playSystem(){
 
 	if(!isPlaying){
-		
+		cout << "**** PLAYING " << getSystemName() << endl;
 		ofRegisterMouseEvents(this);
 		ofRegisterKeyEvents(this);
 		ofAddListener(ofEvents().update, this, &CloudsVisualSystem::update);
@@ -153,6 +158,7 @@ void CloudsVisualSystem::playSystem(){
 
 void CloudsVisualSystem::stopSystem(){
 	if(isPlaying){
+		cout << "**** STOPPING " << getSystemName() << endl;
 
 		selfEnd();
 		
@@ -302,16 +308,6 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
         lightsEnd();
         
 		getCameraRef().end();
-	  
-		//draw point cloud
-//		cloudsCamera.begin();
-//		ofPushMatrix();
-//		//move the pointcloud
-//
-//		selfDrawRGBD();
-//		ofPopMatrix();
-//		
-//		cloudsCamera.end();
 		
 		ofPushStyle();
 		ofPushMatrix();
@@ -1073,7 +1069,7 @@ void CloudsVisualSystem::setupCameraGui()
     camGui->addSlider("ROT-Z", 0, 360.0, zRot->getPosPtr())->setIncrement(1.0);
     camGui->addLabel("TRACK");
     camGui->addButton("ADD KEYFRAME", false);
-    camGui->addToggle("LOCK TO TRACK", cameraTrack->lockCameraToTrack);
+    camGui->addToggle("LOCK TO TRACK", &cameraTrack->lockCameraToTrack);
 	vector<string> transitions;
 	transitions.push_back("2D");
 	transitions.push_back("3D FLY THROUGH");
@@ -1095,12 +1091,16 @@ void CloudsVisualSystem::setupCameraGui()
     ofxUIDropDownList *ddl = camGui->addDropDownList("VIEW", views);
     ddl->setAutoClose(false);
     ddl->setShowCurrentSelected(true);
-    ddl->activateToggle("DISABLE"); 
+    ddl->activateToggle("DISABLE");
+	
+	selfSetupCameraGui();
     
     camGui->autoSizeToFitWidgets();
     ofAddListener(camGui->newGUIEvent,this,&CloudsVisualSystem::guiCameraEvent);
     guis.push_back(camGui);
     guimap[camGui->getName()] = camGui;
+	
+
 }
 
 CloudsVisualSystem::RGBDTransitionType CloudsVisualSystem::getTransitionType()
@@ -2276,9 +2276,7 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 
 	timeline->setDurationInSeconds(timelineDuration);
 	timelineDuration = timeline->getDurationInSeconds();
-	
-	selfPresetLoaded(presetPath);
-	
+		
 	if(bTimelineIsIndefinite){
 		timeline->setLoopType(OF_LOOP_NORMAL);
 	}
@@ -2286,8 +2284,9 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 		timeline->setLoopType(OF_LOOP_NONE);
 	}
 //	if(bShowTimeline){
-		stackGuiWindows();
+	stackGuiWindows();
 //	}
+	selfPresetLoaded(presetPath);
 }
 
 void CloudsVisualSystem::savePresetGUIS(string presetName)
@@ -2723,6 +2722,11 @@ void CloudsVisualSystem::selfSetupRenderGui()
 void CloudsVisualSystem::guiRenderEvent(ofxUIEventArgs &e)
 {
     
+}
+
+void CloudsVisualSystem::selfSetupCameraGui()
+{
+	
 }
 
 void CloudsVisualSystem::selfSetupTimeline()
