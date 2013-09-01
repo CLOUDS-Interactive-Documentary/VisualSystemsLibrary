@@ -145,13 +145,15 @@ void CloudsVisualSystem::playSystem(){
 		
 		selfBegin();
 		
+		
+		//JG: pretty sure this is unnecessary now...
 		cloudsCamera.setup();
 		
-		timeline->setCurrentFrame(0);
-		if(cameraTrack->getKeyframes().size() > 0){
-			cameraTrack->lockCameraToTrack = true;
-		}
-		timeline->play();
+//		timeline->setCurrentFrame(0);
+//		if(cameraTrack->getKeyframes().size() > 0){
+//			cameraTrack->lockCameraToTrack = true;
+//		}
+//		timeline->play();
 		bDebug = false;
 	}
 }
@@ -2278,10 +2280,16 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 	else{
 		timeline->setLoopType(OF_LOOP_NONE);
 	}
-//	if(bShowTimeline){
+
 	stackGuiWindows();
-//	}
+
 	selfPresetLoaded(presetPath);
+	
+	//auto play this preset
+	cameraTrack->lockCameraToTrack = cameraTrack->getKeyframes().size() > 0;
+	timeline->setCurrentTimeMillis(0);
+	timeline->play();
+	
 }
 
 void CloudsVisualSystem::savePresetGUIS(string presetName)
