@@ -335,6 +335,7 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
     
 	if(timeline != NULL && timeline->getIsShowing())
     {
+		ofEnableAlphaBlending();
         ofSetColor(gui->getColorBack());
         ofRect(timeline->getDrawRect()); 
 		timeline->draw();
@@ -2263,8 +2264,7 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 {
     resetTimeline();
 	
-    for(int i = 0; i < guis.size(); i++)
-    {
+    for(int i = 0; i < guis.size(); i++) {
         guis[i]->loadSettings(presetPath+"/"+guis[i]->getName()+".xml");
     }
     cam.reset();
@@ -2289,6 +2289,10 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 	stackGuiWindows();
 
 	selfPresetLoaded(presetPath);
+	
+	getSharedRenderTarget().begin();
+	ofClear(0,0,0,0);
+	getSharedRenderTarget().end();
 	
 	//auto play this preset
 	cameraTrack->lockCameraToTrack = cameraTrack->getKeyframes().size() > 0;
