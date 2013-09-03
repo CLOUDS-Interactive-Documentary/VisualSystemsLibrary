@@ -38,10 +38,10 @@ public:
 		return ofPtr<ofVideoPlayer>( new ofVideoPlayer());
 	}
 	float getFadeIn(){
-		return 1.;
+		return fadeInValue;
 	};
 	float getFadeOut(){
-		return 1.;
+		return fadeOutValue;
 	};
 
 #ifdef AVF_PLAYER
@@ -49,7 +49,6 @@ public:
 #else
 	ofVideoPlayer& getPlayer();
 #endif
-	
 	
 	// Fix extrinsics
 	ofVec3f adjustTranslate;
@@ -115,5 +114,8 @@ public:
 	
     bool bRendererBound;
     bool bMeshGenerated;
+	
+	float fadeInValue;
+	float fadeOutValue;
     
 };

@@ -14,7 +14,9 @@ CloudsRGBDVideoPlayer::CloudsRGBDVideoPlayer(){
 	nearClip    = 1.0f;
 	edgeClip    = 50.0f;
 	farClip     = 6000.0f;
-    
+	
+	fadeOutValue = fadeInValue = 0.0;
+
 	minDepth = 400;
 	maxDepth = 2000;
 	maxVolume = 1.5;
@@ -222,7 +224,6 @@ ofVideoPlayer& CloudsRGBDVideoPlayer::getPlayer(){
 //--------------------------------------------------------------- ACTIONS
 void CloudsRGBDVideoPlayer::update(ofEventArgs& args){
 	
-	
 	currentPlayer.update();
 	if(clipPrerolled){
 		nextPlayer.update();
@@ -238,7 +239,8 @@ void CloudsRGBDVideoPlayer::update(ofEventArgs& args){
 #endif
 	
 	//cout << "position is " << position << " " << duration << " duration " << endl;
-	
+	fadeInValue = MIN(position, 1.0);
+	fadeOutValue = ofMap(position, duration - 1.0, duration, 1.0, 0.0, true);
 	if(position < 1.0){
 		audioVolume = ofMap(position, .8, 1.0, 0., maxVolume, true);
 	}
