@@ -37,10 +37,16 @@ class CloudsRGBDCamera : public ofCamera {
 	ofVec3f startPos;
 	ofQuaternion startQuat;
 	
-	
 	ofNode* startNode;
 	ofNode* targetNode;
 	ofNode mouseBasedNode;
+	
+	//camera drift
+	ofVec3f driftTarget;
+	float maxDriftAngle;
+	float driftNoiseDensity;
+	float driftNoiseSpeed;
+
   protected:
 	ofVec3f currentPosition;
 	ofVec3f currentLookTarget;

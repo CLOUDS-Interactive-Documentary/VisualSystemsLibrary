@@ -21,6 +21,11 @@ CloudsRGBDCamera::CloudsRGBDCamera(){
 	dropAmount = 33;
 	isSetup = false;
 	damp = .1;
+	
+	maxDriftAngle = 0;
+//	driftNoiseDensity = 0;
+//	driftNoiseSpeed = ;
+
 }
 
 void CloudsRGBDCamera::setup(){
@@ -87,7 +92,27 @@ void CloudsRGBDCamera::setPositionFromMouse(){
 	
 	currentLookTarget = lookTarget - ofVec3f(0,dropAmount,0);
 	
-	mouseBasedNode.setPosition(currentPosition);
+	//calculate drift;
+	//ofVec3f driftOffset(0,0,0);
+	ofVec3f driftPosition = currentPosition;
+	float channelA = 1000;
+	float channelB = 1500;
+	if(maxDriftAngle > 0){
+		ofVec3f toCamera = currentPosition - currentLookTarget;
+		ofQuaternion driftQuatX,driftQuatY;
+		
+		float driftX = ofSignedNoise(channelA, driftNoiseSpeed * ofGetElapsedTimef());
+		float driftY = ofSignedNoise(channelB, driftNoiseSpeed * ofGetElapsedTimef());
+		
+		driftPosition.rotate(driftX*maxDriftAngle, currentLookTarget, ofVec3f(0,1,0));
+		driftPosition.rotate(driftY*maxDriftAngle, currentLookTarget, ofVec3f(1,0,0));
+		
+//		driftQuatX.makeRotate(maxDriftAngle*driftX, 0, 1, 0);
+//		driftQuatY.makeRotate(maxDriftAngle*driftY, 1, 0, 0);
+//		driftOffset = driftQuatX * driftQuatY * (ofVec3f(0,0,1) * toCamera.length());
+	}
+	
+	mouseBasedNode.setPosition(driftPosition);
 	mouseBasedNode.lookAt(currentLookTarget);
 }
 
