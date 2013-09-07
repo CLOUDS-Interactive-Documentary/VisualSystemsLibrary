@@ -9,6 +9,10 @@
 #include "CloudsRGBDCamera.h"
 
 CloudsRGBDCamera::CloudsRGBDCamera(){
+	
+	targetNode = NULL;
+	startNode = NULL;
+	
 	sideDistance = 100;
 	frontDistance = 147.54;
 	sidePullback = -48;
