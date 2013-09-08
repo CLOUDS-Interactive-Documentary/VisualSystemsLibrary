@@ -202,7 +202,7 @@ void CloudsRGBDVideoPlayer::setupProjectionUniforms(ofShader& shader){
 
 	shader.setUniform1i("useFaces", useFaces ? 1 : 0);
 	shader.setUniform1f("flowPosition", flowPosition);
-//    shader.setUniform2f("simplify", simplify.x,simplify.y);
+	
 	shader.setUniform1f("farClip", farClip);
     shader.setUniform1f("nearClip", nearClip);
 	shader.setUniform1f("edgeClip", edgeClip);
