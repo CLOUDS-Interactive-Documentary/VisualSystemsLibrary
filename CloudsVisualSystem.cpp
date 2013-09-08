@@ -2277,7 +2277,9 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
     timeline->loadTracksFromFolder(presetPath+"/Timeline/");
 	timeline->setName("Working");
     timeline->saveTracksToFolder(getVisualSystemDataPath()+"Presets/Working/Timeline/");
-
+	if(timelineDuration <= 0){
+		timelineDuration = 60;
+	}
 	timeline->setDurationInSeconds(timelineDuration);
 	timelineDuration = timeline->getDurationInSeconds();
 		
