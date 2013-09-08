@@ -140,6 +140,7 @@ void CloudsVisualSystem::playSystem(){
 		cam.enableMouseInput();
 		for(map<string, ofxLight *>::iterator it = lights.begin(); it != lights.end(); ++it)
 		{
+			//JG WHITE DEATH DEBUG
 			it->second->light.setup();
 		}
 		
@@ -171,6 +172,7 @@ void CloudsVisualSystem::stopSystem(){
 		cam.disableMouseInput();
 		for(map<string, ofxLight *>::iterator it = lights.begin(); it != lights.end(); ++it)
 		{
+			//JG WHITE DEATH
 			it->second->light.destroy();
 		}
 		
@@ -2641,11 +2643,12 @@ ofVec3f CloudsVisualSystem::getCameraPosition()
 
 void CloudsVisualSystem::selfDraw()
 {
-    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-    mat->begin();
-    ofSetColor(ofColor(255));
-    ofFill();
-    mat->end();
+	
+//    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+//    mat->begin();
+//    ofSetColor(ofColor(255));
+//    ofFill();
+//    mat->end();
 }
 
 void CloudsVisualSystem::selfDrawOverlay(){

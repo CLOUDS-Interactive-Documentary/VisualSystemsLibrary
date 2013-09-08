@@ -34,7 +34,7 @@ class ofxLight
 public:    
     ofxLight()
     {
-//        bEnabled = true;
+        bEnabled = true;
 //        light.setup();
         lightPos.set(0.0f,0.0f,0.0f);
         lightOrientation.set(0.0f,0.0f,0.0f);
@@ -43,6 +43,8 @@ public:
         lightSpecular = ofFloatColor(.5f,.5f,.5f,1.f);
         lightSpotCutOff = 45.0f;
         lightExponent = 0.0f;
+		
+//		bEnabled = false;
     }
     
     ~ofxLight()
