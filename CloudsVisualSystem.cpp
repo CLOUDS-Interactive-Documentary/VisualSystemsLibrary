@@ -145,16 +145,9 @@ void CloudsVisualSystem::playSystem(){
 		}
 		
 		selfBegin();
-		
-		
-		//JG: pretty sure this is unnecessary now...
+
 		cloudsCamera.setup();
 		
-//		timeline->setCurrentFrame(0);
-//		if(cameraTrack->getKeyframes().size() > 0){
-//			cameraTrack->lockCameraToTrack = true;
-//		}
-//		timeline->play();
 		bDebug = false;
 	}
 }
@@ -2302,7 +2295,7 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 	cameraTrack->lockCameraToTrack = cameraTrack->getKeyframes().size() > 0;
 	timeline->setCurrentTimeMillis(0);
 	timeline->play();
-	
+	bEnableTimeline = true;
 }
 
 void CloudsVisualSystem::savePresetGUIS(string presetName)
