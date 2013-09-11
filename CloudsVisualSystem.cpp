@@ -32,6 +32,7 @@ CloudsVisualSystem::CloudsVisualSystem(){
 	bUseCameraTrack = false;
 	cameraTrack = NULL;
 	pointcloudScale = .25;
+	confirmedDataPath = false;
 }
 
 CloudsVisualSystem::~CloudsVisualSystem(){
@@ -56,18 +57,22 @@ ofFbo& CloudsVisualSystem::getSharedRenderTarget(){
 }
 
 string CloudsVisualSystem::getVisualSystemDataPath(){
-    
-    bool NotStandALoneFolder = ofDirectory("../../../CloudsLibrary/").exists();
-    
-    string path = "../../../data/";
-    
-    if (NotStandALoneFolder)
-    {
-        path = "../../../CloudsLibrary/src/VisualSystems/"+ getSystemName() +"/bin/data/" ;
-//        cout << "it does exist" << endl;
-    }
-    
-    return path;
+
+	if(!confirmedDataPath){
+		//  building from src project file
+		if(ofDirectory("../../../CloudsLibrary/").exists()){
+			cachedDataPath = "../../../CloudsLibrary/src/VisualSystems/"+ getSystemName() +"/bin/data/";
+		}
+		//  stand alone full app
+		else if(ofDirectory("CloudsData/").exists()){
+			cachedDataPath =  "CloudsData/VisualSystems/"+ getSystemName() + "/";
+		}
+		else{
+			cachedDataPath =  "../../../data/";
+		}
+		confirmedDataPath = true;
+	}
+	return cachedDataPath;
 }
 
 string CloudsVisualSystem::getSystemName(){

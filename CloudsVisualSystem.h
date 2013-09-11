@@ -361,7 +361,8 @@ class CloudsVisualSystem {
 	CloudsRGBDVideoPlayer* sharedRenderer;
 	//set to true if the pointcloud renderer has valid speaker
 	bool hasSpeaker;
-	
+	bool confirmedDataPath;
+	string cachedDataPath;
 	
 	//speaker and quote info, constantly updated
 	string speakerFirstName;
