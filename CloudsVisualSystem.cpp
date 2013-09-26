@@ -2,6 +2,10 @@
 #include "CloudsVisualSystem.h"
 #include "CloudsRGBDVideoPlayer.h"
 
+#ifdef AVF_PLAYER
+#include "ofxAVFVideoPlayer.h"
+#endif
+
 static ofFbo staticRenderTarget;
 static ofImage sharedCursor;
 static CloudsRGBDVideoPlayer rgbdPlayer;
@@ -280,10 +284,8 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
         
         drawBackground();
 	  
-	  
-	  //start our 3d scene
+		//start our 3d scene
 		getCameraRef().begin();
-//		currentCamera->begin();
 	  
         ofRotateX(xRot->getPos());
         ofRotateY(yRot->getPos());
@@ -291,8 +293,8 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
         
         selfSceneTransformation();
 	  
-	  //accumulated position offset
-	  ofTranslate( positionOffset );
+		//accumulated position offset
+		ofTranslate( positionOffset );
         
         glEnable(GL_DEPTH_TEST);
         
@@ -326,11 +328,6 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
 	  //draw the fbo to the screen as a full screen quad
 	  if(bDrawToScreen)	selfPostDraw();
 	  
-	  //other
-//		ofPushStyle();
-//		ofEnableAlphaBlending();
-//		getCursor().draw( ofGetMouseX(),ofGetMouseY() );
-//		ofPopStyle();
 	}
     
 	if(timeline != NULL && timeline->getIsShowing())
@@ -2418,6 +2415,11 @@ void CloudsVisualSystem::setDrawToScreen( bool state )
 
 
 float CloudsVisualSystem::getCurrentAudioAmplitude(){
+#if (AVF_PLAYER && __MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_7)
+	return getRGBDVideoPlayer().getPlayer().getAmplitude();
+#else
+	return 0;
+#endif
 	
 }
 
@@ -2661,9 +2663,10 @@ void CloudsVisualSystem::selfPostDraw(){
 	
 	CloudsVisualSystem::getSharedRenderTarget().draw(0,CloudsVisualSystem::getSharedRenderTarget().getHeight(),
 													 CloudsVisualSystem::getSharedRenderTarget().getWidth(),
-													 -CloudsVisualSystem::getSharedRenderTarget().getHeight());	
+													 -CloudsVisualSystem::getSharedRenderTarget().getHeight());
 }
 
+	
 void CloudsVisualSystem::selfExit()
 {
     
