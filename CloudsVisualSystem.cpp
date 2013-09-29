@@ -6,9 +6,15 @@
 #include "ofxAVFVideoPlayer.h"
 #endif
 
+
+//using namespace OVR;
+
+
 static ofFbo staticRenderTarget;
 static ofImage sharedCursor;
 static CloudsRGBDVideoPlayer rgbdPlayer;
+
+
 
 //default render target is a statically shared FBO
 ofFbo& CloudsVisualSystem::getStaticRenderTarget(){
@@ -26,6 +32,19 @@ CloudsRGBDVideoPlayer& CloudsVisualSystem::getRGBDVideoPlayer(){
 	return rgbdPlayer;
 }
 
+
+#ifdef OCULUS_RIFT
+static ofxOculusRift oculusRift;
+#include "OVR.h"
+ofxOculusRift& CloudsVisualSystem::getOculusRift(){
+	if(!oculusRift.isSetup()){
+		oculusRift.setup();
+	}
+
+	return oculusRift;
+}
+#endif
+
 CloudsVisualSystem::CloudsVisualSystem(){
 	isPlaying = false;
 	timeline = NULL;
@@ -37,6 +56,14 @@ CloudsVisualSystem::CloudsVisualSystem(){
 	cameraTrack = NULL;
 	pointcloudScale = .25;
 	confirmedDataPath = false;
+	
+	//hardcoded for now
+#ifdef OCULUS_RIFT
+	bUseOculusRift = true;
+#else
+	bUseOculusRift = false;
+#endif 
+	
 }
 
 CloudsVisualSystem::~CloudsVisualSystem(){
@@ -276,58 +303,54 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
     if(bRenderSystem)
     {
 	  
-	  //bind our fbo, lights, debug 
-        CloudsVisualSystem::getSharedRenderTarget().begin();
-		if(bClearBackground){
-			ofClear(0, 0, 0, 0);
+	  //bind our fbo, lights, debug
+        if(bUseOculusRift){
+			#ifdef OCULUS_RIFT
+			getOculusRift().baseCamera = &getCameraRef();
+			getOculusRift().beginLeftEye();
+			drawScene();
+			getOculusRift().endLeftEye();
+			
+			getOculusRift().beginRightEye();
+			drawScene();
+			getOculusRift().endRightEye();
+			
+			if(bDrawToScreen){
+				oculusRift.draw();
+			}
+			#endif
 		}
-        
-        drawBackground();
-	  
-		//start our 3d scene
-		getCameraRef().begin();
-	  
-        ofRotateX(xRot->getPos());
-        ofRotateY(yRot->getPos());
-        ofRotateZ(zRot->getPos());
-        
-        selfSceneTransformation();
-	  
-		//accumulated position offset
-		ofTranslate( positionOffset );
-        
-        glEnable(GL_DEPTH_TEST);
-        
-		ofPushStyle();
-        drawDebug();
-        ofPopStyle();
-        
-        lightsBegin();
-      
-		//draw this visual system
-		ofPushStyle();
-        selfDraw();
-        ofPopStyle();
+		else {
 		
-        lightsEnd();
-        
-		getCameraRef().end();
-		
-		ofPushStyle();
-		ofPushMatrix();
-		ofTranslate(0, ofGetHeight());
-		ofScale(1,-1,1);
-		
-		selfDrawOverlay();
-		
-		ofPopMatrix();
-		ofPopStyle();
-		
-        CloudsVisualSystem::getSharedRenderTarget().end();
-		
-	  //draw the fbo to the screen as a full screen quad
-	  if(bDrawToScreen)	selfPostDraw();
-	  
+			CloudsVisualSystem::getSharedRenderTarget().begin();
+			if(bClearBackground){
+				ofClear(0, 0, 0, 0);
+			}
+			drawBackground();
+			
+			getCameraRef().begin();
+			
+			drawScene();
+			
+			getCameraRef().end();
+			
+			ofPushStyle();
+			ofPushMatrix();
+			ofTranslate(0, ofGetHeight());
+			ofScale(1,-1,1);
+			
+			selfDrawOverlay();
+			
+			ofPopMatrix();
+			ofPopStyle();
+	
+			CloudsVisualSystem::getSharedRenderTarget().end();
+			
+			//draw the fbo to the screen as a full screen quad
+			if(bDrawToScreen){
+				selfPostDraw();
+			}
+		}
 	}
     
 	if(timeline != NULL && timeline->getIsShowing())
@@ -341,10 +364,45 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
     ofPopStyle();
 }
 
+void CloudsVisualSystem::drawScene(){
+	
+	
+	//start our 3d scene
+
+	
+	ofRotateX(xRot->getPos());
+	ofRotateY(yRot->getPos());
+	ofRotateZ(zRot->getPos());
+	
+	selfSceneTransformation();
+	
+	//accumulated position offset
+	ofTranslate( positionOffset );
+	
+	glEnable(GL_DEPTH_TEST);
+	
+	ofPushStyle();
+	drawDebug();
+	ofPopStyle();
+	
+	lightsBegin();
+	
+	//draw this visual system
+	ofPushStyle();
+	selfDraw();
+	ofPopStyle();
+	
+	lightsEnd();
+	
+	
+}
+
 void CloudsVisualSystem::setupRGBDTransforms(){
 	ofTranslate(0,0,pointcloudOffsetZ);
 	ofScale(pointcloudScale,pointcloudScale,pointcloudScale);
-	ofScale(-1, -1, 1);
+	if(!bUseOculusRift){
+		ofScale(-1, -1, 1);
+	}
 }
 
 void CloudsVisualSystem::exit(ofEventArgs & args)

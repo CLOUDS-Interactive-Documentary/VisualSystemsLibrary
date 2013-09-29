@@ -11,6 +11,10 @@
 #include "ofxLight.h"
 #include "ofxGenerative.h"
 
+#ifdef OCULUS_RIFT
+#include "ofxOculusRift.h"
+#endif
+
 /**
  * The CLOUDS Visual System super class
  * All visual systems will extend from this class
@@ -49,7 +53,9 @@ class CloudsVisualSystem {
 	
 	static ofFbo& getStaticRenderTarget(); //default
 	static CloudsRGBDVideoPlayer& getRGBDVideoPlayer();
-	
+#ifdef OCULUS_RIFT
+	static ofxOculusRift& getOculusRift();
+#endif
 	ofFbo& getSharedRenderTarget();
 	ofImage& getCursor();
 	
@@ -253,9 +259,7 @@ class CloudsVisualSystem {
 	
 	void setDrawToScreen( bool state );
 	bool getDrawToScreen();
-	
 
-//	void loadTestVideo();
 	float getCurrentAudioAmplitude();
 	
   protected:
@@ -271,6 +275,7 @@ class CloudsVisualSystem {
     ofxUISuperCanvas *tlGui;
 	
 	void stackGuiWindows();
+	void drawScene();
 	
     vector<ofxUISuperCanvas *> guis;
     map<string, ofxUICanvas *> guimap;
@@ -320,6 +325,7 @@ class CloudsVisualSystem {
 	bool bDrawToScreen;
 //	bool bIs3D;
 	
+	bool bUseOculusRift;
     //CAM
     float camDistance;
     float camFOV;
