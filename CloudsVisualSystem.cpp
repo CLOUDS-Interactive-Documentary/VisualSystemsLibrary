@@ -400,9 +400,9 @@ void CloudsVisualSystem::drawScene(){
 void CloudsVisualSystem::setupRGBDTransforms(){
 	ofTranslate(0,0,pointcloudOffsetZ);
 	ofScale(pointcloudScale,pointcloudScale,pointcloudScale);
-	if(!bUseOculusRift){
+	//if(!bUseOculusRift){
 		ofScale(-1, -1, 1);
-	}
+	//}
 }
 
 void CloudsVisualSystem::exit(ofEventArgs & args)
