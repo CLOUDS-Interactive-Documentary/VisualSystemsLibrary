@@ -52,14 +52,14 @@ class CloudsVisualSystem {
 	};
 	
 	static ofFbo& getStaticRenderTarget(); //default
+	static void loadBackgroundShader();
 	static CloudsRGBDVideoPlayer& getRGBDVideoPlayer();
+	static void getBackgroundMesh(ofMesh& mesh, ofImage& image, float width, float height);
 #ifdef OCULUS_RIFT
 	static ofxOculusRift& getOculusRift();
 #endif
 	ofFbo& getSharedRenderTarget();
 	ofImage& getCursor();
-	
-
 	
 	//SUB CLASSES USE THESE METHODS:
     virtual void selfSetup();
@@ -323,7 +323,6 @@ class CloudsVisualSystem {
     float debugGridSize;
 	bool bClearBackground;
 	bool bDrawToScreen;
-//	bool bIs3D;
 	
 	bool bUseOculusRift;
     //CAM
@@ -335,6 +334,7 @@ class CloudsVisualSystem {
     ofx1DExtruder *xRot;
     ofx1DExtruder *yRot;
     ofx1DExtruder *zRot;
+	
 	
     //TIMELINE
     void resetTimeline();
@@ -361,7 +361,9 @@ class CloudsVisualSystem {
     bool bShowTimeline;
     bool bEnableTimelineTrackCreation;
 
-	
+	//background stuff
+	bool bMatchBackgrounds;
+		
 	//these variables are set by the playback controller when displaying
 	//ways to interact with the pointcloud data
 	CloudsRGBDVideoPlayer* sharedRenderer;
