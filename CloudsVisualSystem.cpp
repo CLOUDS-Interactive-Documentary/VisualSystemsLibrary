@@ -492,9 +492,14 @@ void CloudsVisualSystem::exit(ofEventArgs & args)
     materials.clear();
     materialGuis.clear();
 	
-	
-	delete cameraTrack;
-    delete timeline;
+	if(cameraTrack != NULL){
+		delete cameraTrack;
+		cameraTrack = NULL;
+	}
+	if(timeline != NULL){
+		delete timeline;
+		timeline = NULL;
+	}
 
     selfExit();
     
@@ -1633,10 +1638,8 @@ void CloudsVisualSystem::guiLightEvent(ofxUIEventArgs &e)
 
 void CloudsVisualSystem::setupTimeline()
 {
-    if(timeline != NULL)
-    {
+    if(timeline != NULL){
         delete timeline;
-        timeline = NULL;
     }
 	
 	timeline = new ofxTimeline();
@@ -1652,6 +1655,9 @@ void CloudsVisualSystem::setupTimeline()
 	timeline->setLoopType(OF_LOOP_NONE);
     timeline->setPageName(ofToUpper(getSystemName()));
 	
+	if(cameraTrack != NULL){
+		delete cameraTrack;
+	}
 	cameraTrack = new ofxTLCameraTrack();
 	cameraTrack->setCamera(getCameraRef());
 	cameraTrack->setXMLFileName(getVisualSystemDataPath()+"Presets/Working/Timeline/cameraTrack.xml");
@@ -1676,12 +1682,16 @@ void CloudsVisualSystem::setupTimeline()
 
 void CloudsVisualSystem::resetTimeline()
 {
-	ofRemoveListener(timeline->events().bangFired, this, &CloudsVisualSystem::timelineBangEvent);
-    timeline->reset();
-    cameraTrack->disable();
-	cameraTrack->lockCameraToTrack = false;
-	delete cameraTrack;
-	cameraTrack = NULL;
+	if(timeline != NULL){
+		ofRemoveListener(timeline->events().bangFired, this, &CloudsVisualSystem::timelineBangEvent);
+		timeline->reset();
+	}
+	if(cameraTrack != NULL){
+		cameraTrack->disable();
+		cameraTrack->lockCameraToTrack = false;
+		delete cameraTrack;
+		cameraTrack = NULL;
+	}
     setupTimeline();
 }
 
@@ -2378,7 +2388,8 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
     resetTimeline();
 	
     for(int i = 0; i < guis.size(); i++) {
-        guis[i]->loadSettings(presetPath+"/"+guis[i]->getName()+".xml");
+		string presetPathName = presetPath+"/"+guis[i]->getName()+".xml";
+        guis[i]->loadSettings(presetPathName);
     }
     cam.reset();
     ofxLoadCamera(cam, presetPath+"/ofEasyCamSettings");
