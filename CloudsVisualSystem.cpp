@@ -114,6 +114,7 @@ CloudsVisualSystem::CloudsVisualSystem(){
 	cameraTrack = NULL;
 	pointcloudScale = .25;
 	confirmedDataPath = false;
+	bBarGradient = false;
 	
 	//hardcoded for now
 #ifdef OCULUS_RIFT
@@ -1043,6 +1044,7 @@ void CloudsVisualSystem::setupBackgroundGui()
     bgGui->resetPlacer();
     bgGui->addWidgetDown(toggle, OFX_UI_ALIGN_RIGHT, true);
     bgGui->addWidgetToHeader(toggle);
+	bgGui->addToggle("BAR GRAD", &bBarGradient);
     bgGui->addSpacer();
 
     bgGui->addSlider("HUE", 0.0, 255.0, bgHue->getPosPtr());
@@ -2653,6 +2655,7 @@ void CloudsVisualSystem::drawBackground()
 	ofEnableAlphaBlending();
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
+	
 	if(bMatchBackgrounds){
 		bgHue2->setHome(bgHue->getPos());
 		bgSat2->setHome(bgSat->getPos());
@@ -2665,27 +2668,41 @@ void CloudsVisualSystem::drawBackground()
 			loadBackgroundShader();
 		}
 		
-		if(gradientMode == OF_GRADIENT_CIRCULAR)
-		{
-			if(backgroundGradientCircle.isAllocated()){
-				backgroundShader.begin();
-				backgroundShader.setUniformTexture("image", backgroundGradientCircle, 0);
-				backgroundShader.setUniform3f("colorOne", bgColor->r/255., bgColor->g/255., bgColor->b/255.);
-				backgroundShader.setUniform3f("colorTwo", bgColor2->r/255., bgColor2->g/255., bgColor2->b/255.);
-				
-//				backgroundGradientCircle.bind();
-				ofMesh mesh;
-				getBackgroundMesh(mesh, backgroundGradientCircle, ofGetWidth(), ofGetHeight());				
-				mesh.draw();
-				//backgroundGradientCircle.unbind();
-				
-//				backgroundGradientCircle.draw(0,0);
-				
-				backgroundShader.end();
+		if(gradientMode != -1){
+//			cout << "drawing grad " << (bBarGradient ? "BAR" : "CIRCE") << endl;
+			if(bBarGradient){
+//				cout << "drawing bar: ";
+				if(backgroundGradientBar.isAllocated()){
+//					cout << "shader" << endl;
+					backgroundShader.begin();
+					backgroundShader.setUniformTexture("image", backgroundGradientBar, 0);
+					backgroundShader.setUniform3f("colorOne", bgColor->r/255., bgColor->g/255., bgColor->b/255.);
+					backgroundShader.setUniform3f("colorTwo", bgColor2->r/255., bgColor2->g/255., bgColor2->b/255.);
+					ofMesh mesh;
+					getBackgroundMesh(mesh, backgroundGradientCircle, ofGetWidth(), ofGetHeight());
+					mesh.draw();
+					backgroundShader.end();
+				}
+				else{
+					ofSetSmoothLighting(true);
+					ofBackgroundGradient(*bgColor, *bgColor2, OF_GRADIENT_BAR);
+				}
 			}
 			else{
-				ofSetSmoothLighting(true);
-				ofBackgroundGradient(*bgColor, *bgColor2, OF_GRADIENT_CIRCULAR);
+				if(backgroundGradientCircle.isAllocated()){
+					backgroundShader.begin();
+					backgroundShader.setUniformTexture("image", backgroundGradientCircle, 0);
+					backgroundShader.setUniform3f("colorOne", bgColor->r/255., bgColor->g/255., bgColor->b/255.);
+					backgroundShader.setUniform3f("colorTwo", bgColor2->r/255., bgColor2->g/255., bgColor2->b/255.);
+					ofMesh mesh;
+					getBackgroundMesh(mesh, backgroundGradientCircle, ofGetWidth(), ofGetHeight());
+					mesh.draw();
+					backgroundShader.end();
+				}
+				else{
+					ofSetSmoothLighting(true);
+					ofBackgroundGradient(*bgColor, *bgColor2, OF_GRADIENT_CIRCULAR);
+				}
 			}
 			
 		}

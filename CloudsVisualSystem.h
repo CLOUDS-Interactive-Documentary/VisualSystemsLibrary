@@ -282,6 +282,7 @@ class CloudsVisualSystem {
 	
     //Background Props
     float bgAspectRatio;
+	bool bBarGradient;
     int gradientMode;
 	ofColor *bgColor;
 	ofx1DExtruder *bgHue;
