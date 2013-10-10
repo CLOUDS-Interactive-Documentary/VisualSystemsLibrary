@@ -674,7 +674,7 @@ void CloudsVisualSystem::mousePressed(ofMouseEventArgs & args)
 }
 
 bool CloudsVisualSystem::cursorIsOverGUI(){
-	if(timeline->getDrawRect().inside(ofGetMouseX(),ofGetMouseY())){
+	if( timeline->getIsShowing() && timeline->getDrawRect().inside(ofGetMouseX(),ofGetMouseY())){
 		return true;
 	}
 	
