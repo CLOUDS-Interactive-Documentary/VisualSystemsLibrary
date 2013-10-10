@@ -7,13 +7,40 @@
 #endif
 
 
-//using namespace OVR;
+#define GLSL(version, shader)  "#version " #version "\n" #shader
 
+static const char*
+BackgroundVert =
+GLSL(120,
+varying vec2 oTexCoord;
+void main()
+{
+	oTexCoord = gl_MultiTexCoord0.xy;
+	gl_Position = ftransform();
+});
+
+
+static const char*
+BackgroundFrag =
+GLSL(120,
+	 
+uniform sampler2DRect image;
+uniform vec3 colorOne;
+uniform vec3 colorTwo;
+varying vec2 oTexCoord;
+
+void main()
+{
+	gl_FragColor = vec4(mix(colorTwo,colorOne, texture2DRect(image,oTexCoord).r), 1.0);
+});
 
 static ofFbo staticRenderTarget;
 static ofImage sharedCursor;
 static CloudsRGBDVideoPlayer rgbdPlayer;
-
+static bool backgroundShaderLoaded = false;
+static ofShader backgroundShader;
+static ofImage backgroundGradientCircle;
+static ofImage backgroundGradientBar;
 
 
 //default render target is a statically shared FBO
@@ -30,6 +57,37 @@ ofImage& CloudsVisualSystem::getCursor(){
 
 CloudsRGBDVideoPlayer& CloudsVisualSystem::getRGBDVideoPlayer(){
 	return rgbdPlayer;
+}
+
+void CloudsVisualSystem::loadBackgroundShader(){
+	backgroundGradientBar.loadImage("Backgrounds/bar.png");
+	backgroundGradientCircle.loadImage("Backgrounds/circle.png");
+	backgroundShader.setupShaderFromSource(GL_VERTEX_SHADER, BackgroundVert);
+	backgroundShader.setupShaderFromSource(GL_FRAGMENT_SHADER, BackgroundFrag);
+	backgroundShader.linkProgram();
+	
+	backgroundShaderLoaded = true;	
+}
+
+void CloudsVisualSystem::getBackgroundMesh(ofMesh& mesh, ofImage& image, float width, float height){
+	ofRectangle screenRect(0,0,width,height);
+	ofRectangle imageRect(0,0,image.getWidth(), image.getHeight());
+	
+	imageRect.scaleTo(screenRect, OF_ASPECT_RATIO_KEEP_BY_EXPANDING);
+
+	mesh.addVertex(ofVec3f(imageRect.getMinX(),imageRect.getMinY()));
+	mesh.addTexCoord(ofVec2f(0,0));
+
+	mesh.addVertex(ofVec3f(imageRect.getMinX(),imageRect.getMaxY()));
+	mesh.addTexCoord(ofVec2f(0,image.getHeight()));
+
+	mesh.addVertex(ofVec3f(imageRect.getMaxX(),imageRect.getMinY()));
+	mesh.addTexCoord(ofVec2f(image.getWidth(),0));
+
+	mesh.addVertex(ofVec3f(imageRect.getMaxX(),imageRect.getMaxY()));
+	mesh.addTexCoord(ofVec2f(image.getWidth(),image.getHeight()));
+	
+	mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
 }
 
 
@@ -56,6 +114,7 @@ CloudsVisualSystem::CloudsVisualSystem(){
 	cameraTrack = NULL;
 	pointcloudScale = .25;
 	confirmedDataPath = false;
+	bBarGradient = false;
 	
 	//hardcoded for now
 #ifdef OCULUS_RIFT
@@ -400,9 +459,8 @@ void CloudsVisualSystem::drawScene(){
 void CloudsVisualSystem::setupRGBDTransforms(){
 	ofTranslate(0,0,pointcloudOffsetZ);
 	ofScale(pointcloudScale,pointcloudScale,pointcloudScale);
-	//if(!bUseOculusRift){
-		ofScale(-1, -1, 1);
-	//}
+	ofScale(-1, -1, 1);
+
 }
 
 void CloudsVisualSystem::exit(ofEventArgs & args)
@@ -435,9 +493,14 @@ void CloudsVisualSystem::exit(ofEventArgs & args)
     materials.clear();
     materialGuis.clear();
 	
-	
-	delete cameraTrack;
-    delete timeline;
+	if(cameraTrack != NULL){
+		delete cameraTrack;
+		cameraTrack = NULL;
+	}
+	if(timeline != NULL){
+		delete timeline;
+		timeline = NULL;
+	}
 
     selfExit();
     
@@ -981,17 +1044,19 @@ void CloudsVisualSystem::setupBackgroundGui()
     bgGui->resetPlacer();
     bgGui->addWidgetDown(toggle, OFX_UI_ALIGN_RIGHT, true);
     bgGui->addWidgetToHeader(toggle);
+	bgGui->addToggle("BAR GRAD", &bBarGradient);
     bgGui->addSpacer();
 
     bgGui->addSlider("HUE", 0.0, 255.0, bgHue->getPosPtr());
     bgGui->addSlider("SAT", 0.0, 255.0, bgSat->getPosPtr());
     bgGui->addSlider("BRI", 0.0, 255.0, bgBri->getPosPtr());
     bgGui->addSpacer();
+	bgGui->addButton("MATCH", &bMatchBackgrounds);
     hueSlider = bgGui->addSlider("HUE2", 0.0, 255.0, bgHue2->getPosPtr());
     satSlider = bgGui->addSlider("SAT2", 0.0, 255.0, bgSat2->getPosPtr());
     briSlider = bgGui->addSlider("BRI2", 0.0, 255.0, bgBri2->getPosPtr());
     bgGui->autoSizeToFitWidgets();
-    ofAddListener(bgGui->newGUIEvent,this,&CloudsVisualSystem::guiBackgroundEvent);
+    ofAddListener(bgGui->newGUIEvent, this, &CloudsVisualSystem::guiBackgroundEvent);
     guis.push_back(bgGui);
     guimap[bgGui->getName()] = bgGui;
 }
@@ -1127,7 +1192,7 @@ void CloudsVisualSystem::setupCameraGui()
     camGui->addSlider("ROT-Z", 0, 360.0, zRot->getPosPtr())->setIncrement(1.0);
     camGui->addLabel("TRACK");
     camGui->addButton("ADD KEYFRAME", false);
-    camGui->addToggle("LOCK TO TRACK", &cameraTrack->lockCameraToTrack);
+//    camGui->addToggle("LOCK TO TRACK", &cameraTrack->lockCameraToTrack);
 	vector<string> transitions;
 	transitions.push_back("2D");
 	transitions.push_back("3D FLY THROUGH");
@@ -1575,10 +1640,8 @@ void CloudsVisualSystem::guiLightEvent(ofxUIEventArgs &e)
 
 void CloudsVisualSystem::setupTimeline()
 {
-    if(timeline != NULL)
-    {
+    if(timeline != NULL){
         delete timeline;
-        timeline = NULL;
     }
 	
 	timeline = new ofxTimeline();
@@ -1594,6 +1657,9 @@ void CloudsVisualSystem::setupTimeline()
 	timeline->setLoopType(OF_LOOP_NONE);
     timeline->setPageName(ofToUpper(getSystemName()));
 	
+	if(cameraTrack != NULL){
+		delete cameraTrack;
+	}
 	cameraTrack = new ofxTLCameraTrack();
 	cameraTrack->setCamera(getCameraRef());
 	cameraTrack->setXMLFileName(getVisualSystemDataPath()+"Presets/Working/Timeline/cameraTrack.xml");
@@ -1618,12 +1684,16 @@ void CloudsVisualSystem::setupTimeline()
 
 void CloudsVisualSystem::resetTimeline()
 {
-	ofRemoveListener(timeline->events().bangFired, this, &CloudsVisualSystem::timelineBangEvent);
-    timeline->reset();
-    cameraTrack->disable();
-	cameraTrack->lockCameraToTrack = false;
-	delete cameraTrack;
-	cameraTrack = NULL;
+	if(timeline != NULL){
+		ofRemoveListener(timeline->events().bangFired, this, &CloudsVisualSystem::timelineBangEvent);
+		timeline->reset();
+	}
+	if(cameraTrack != NULL){
+		cameraTrack->disable();
+		cameraTrack->lockCameraToTrack = false;
+		delete cameraTrack;
+		cameraTrack = NULL;
+	}
     setupTimeline();
 }
 
@@ -2320,7 +2390,8 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
     resetTimeline();
 	
     for(int i = 0; i < guis.size(); i++) {
-        guis[i]->loadSettings(presetPath+"/"+guis[i]->getName()+".xml");
+		string presetPathName = presetPath+"/"+guis[i]->getName()+".xml";
+        guis[i]->loadSettings(presetPathName);
     }
     cam.reset();
     ofxLoadCamera(cam, presetPath+"/ofEasyCamSettings");
@@ -2580,48 +2651,68 @@ void CloudsVisualSystem::drawNormalizedTexturedQuad()
 void CloudsVisualSystem::drawBackground()
 {
 	ofPushStyle();
-	//	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	
 	ofEnableAlphaBlending();
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
 	
+	if(bMatchBackgrounds){
+		bgHue2->setHome(bgHue->getPos());
+		bgSat2->setHome(bgSat->getPos());
+		bgBri2->setHome(bgBri->getPos());
+	}
+	
     if(bClearBackground)
 	{
-		if(gradientMode == OF_GRADIENT_CIRCULAR)
-		{
-			
-			//  TEMPORAL FIX
-			//
-			//		cout << "drawing bckground color " << *bgColor << " " << *bgColor2 << endl;
-			ofSetSmoothLighting(true);
-			ofBackgroundGradient(*bgColor, *bgColor2, OF_GRADIENT_CIRCULAR);
-			
-			//  Sorry Reza this is a quick and durty fix
-			//
-			//        ofPushMatrix();
-			//        if(camFOV > 60)
-			//        {
-			//            ofBackground(*bgColor2);
-			//        }
-			//        billBoard(cam.getGlobalPosition(), ofVec3f(0,0,0));
-			//        ofDisableLighting();
-			//        ofSetSmoothLighting(true);
-			//        glNormal3f(0,0,1);
-			//        ofLayerGradient(*bgColor, *bgColor2);
-			//        ofPopMatrix();
+		if(!backgroundShaderLoaded){
+			loadBackgroundShader();
+		}
+		
+		if(gradientMode != -1){
+//			cout << "drawing grad " << (bBarGradient ? "BAR" : "CIRCE") << endl;
+			if(bBarGradient){
+//				cout << "drawing bar: ";
+				if(backgroundGradientBar.isAllocated()){
+//					cout << "shader" << endl;
+					backgroundShader.begin();
+					backgroundShader.setUniformTexture("image", backgroundGradientBar, 0);
+					backgroundShader.setUniform3f("colorOne", bgColor->r/255., bgColor->g/255., bgColor->b/255.);
+					backgroundShader.setUniform3f("colorTwo", bgColor2->r/255., bgColor2->g/255., bgColor2->b/255.);
+					ofMesh mesh;
+					getBackgroundMesh(mesh, backgroundGradientCircle, ofGetWidth(), ofGetHeight());
+					mesh.draw();
+					backgroundShader.end();
+				}
+				else{
+					ofSetSmoothLighting(true);
+					ofBackgroundGradient(*bgColor, *bgColor2, OF_GRADIENT_BAR);
+				}
+			}
+			else{
+				if(backgroundGradientCircle.isAllocated()){
+					backgroundShader.begin();
+					backgroundShader.setUniformTexture("image", backgroundGradientCircle, 0);
+					backgroundShader.setUniform3f("colorOne", bgColor->r/255., bgColor->g/255., bgColor->b/255.);
+					backgroundShader.setUniform3f("colorTwo", bgColor2->r/255., bgColor2->g/255., bgColor2->b/255.);
+					ofMesh mesh;
+					getBackgroundMesh(mesh, backgroundGradientCircle, ofGetWidth(), ofGetHeight());
+					mesh.draw();
+					backgroundShader.end();
+				}
+				else{
+					ofSetSmoothLighting(true);
+					ofBackgroundGradient(*bgColor, *bgColor2, OF_GRADIENT_CIRCULAR);
+				}
+			}
 			
 		}
-		else
-		{
+		else{
 			ofSetSmoothLighting(false);
 			ofBackground(*bgColor);
 		}
 	}
 
-	//	glPopAttrib();
-	
-	
+
 	ofPopStyle();
 	
 
@@ -2718,7 +2809,7 @@ void CloudsVisualSystem::selfDrawOverlay(){
 void CloudsVisualSystem::selfPostDraw(){
 	
 	//draws to viewport
-	
+	glDisable(GL_LIGHTING);
 	CloudsVisualSystem::getSharedRenderTarget().draw(0,CloudsVisualSystem::getSharedRenderTarget().getHeight(),
 													 CloudsVisualSystem::getSharedRenderTarget().getWidth(),
 													 -CloudsVisualSystem::getSharedRenderTarget().getHeight());
