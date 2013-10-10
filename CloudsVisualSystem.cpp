@@ -337,13 +337,9 @@ void CloudsVisualSystem::update(ofEventArgs & args)
         bgColor->setHsb(bgHue->getPos(), bgSat->getPos(), bgBri->getPos(), 255);
         bgColor2->setHsb(bgHue2->getPos(), bgSat2->getPos(), bgBri2->getPos(), 255);
 		
-		
-		//update pointcloud stuff
-		
 		//update camera
-	  translatedHeadPosition = getRGBDVideoPlayer().headPosition * pointcloudScale + ofVec3f(0,0,pointcloudOffsetZ);// + positionOffset;
-	  cloudsCamera.lookTarget = translatedHeadPosition;// + positionOffset;
-		//LB: I added our positionOffset to the cloudsCamera positioning stuff above. Is there a better way to do this?
+		translatedHeadPosition = getRGBDVideoPlayer().headPosition * pointcloudScale + ofVec3f(0,0,pointcloudOffsetZ);
+		cloudsCamera.lookTarget = translatedHeadPosition;
 		
         selfUpdate();
     }
