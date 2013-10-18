@@ -58,7 +58,6 @@ void CloudsRGBDCamera::update(ofEventArgs& args){
 		ofQuaternion rotQuat;
 		rotQuat.slerp( t, startNode->getOrientationQuat(), targetNode->getOrientationQuat() );
 		
-		
 		setOrientation( ofQuaternion() );
 		setPosition( targetNode->getPosition()*t + startNode->getPosition()*(1.-t) );
 		setOrientation( rotQuat );
