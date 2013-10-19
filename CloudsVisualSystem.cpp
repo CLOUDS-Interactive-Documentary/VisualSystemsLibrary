@@ -140,7 +140,7 @@ ofFbo& CloudsVisualSystem::getSharedRenderTarget(){
     {
         renderTarget.allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
 		renderTarget.begin();
-		ofClear(0,0,0,0);
+		ofClear(0,0,0,1.0);
 		renderTarget.end();
     }
     return renderTarget;
@@ -341,8 +341,8 @@ void CloudsVisualSystem::update(ofEventArgs & args)
 	
 	bgColor = ofColor::fromHsb(MIN(bgHue,254.), bgSat, bgBri, 255);
 	bgColor2 = ofColor::fromHsb(MIN(bgHue2,254.), bgSat2, bgBri2, 255);
-	cout << "color 1 " << int(bgColor.r) << " " << int(bgColor.g) << " " << int(bgColor.b) << endl;
-	cout << "color 2 " << int(bgColor2.r) << " " << int(bgColor2.g) << " " << int(bgColor2.b) << endl;
+//	cout << "color 1 " << int(bgColor.r) << " " << int(bgColor.g) << " " << int(bgColor.b) << endl;
+//	cout << "color 2 " << int(bgColor2.r) << " " << int(bgColor2.g) << " " << int(bgColor2.b) << endl;
 	
 	//Make this happen only when the timeline is modified by the user or when a new track is added.
 	if(!ofGetMousePressed())
@@ -381,7 +381,7 @@ void CloudsVisualSystem::draw(ofEventArgs & args)
 		
 			CloudsVisualSystem::getSharedRenderTarget().begin();
 			if(bClearBackground){
-				ofClear(0, 0, 0, 0);
+				ofClear(0, 0, 0, 1.0);
 			}
 			drawBackground();
 			
@@ -1016,12 +1016,12 @@ void CloudsVisualSystem::setupBackgroundGui()
 //	bgSat->setHome(0);
 //	bgBri->setHome(0);
 //    bgColor = new ofColor(0,0,0);
-    
+    bgColor = ofColor(0,0,0);
 //    bgHue2->setHome((330.0/360.0)*255.0);
 //	bgSat2->setHome(0);
 //	bgBri2->setHome(0);
 //	bgColor2 = new ofColor(0,0,0);
-    
+    bgColor2 = ofColor(0,0,0);
 //    extruders.push_back(bgHue);
 //    extruders.push_back(bgSat);
 //    extruders.push_back(bgBri);
@@ -2417,7 +2417,7 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 	selfPresetLoaded(presetPath);
 	
 	getSharedRenderTarget().begin();
-	ofClear(0,0,0,0);
+	ofClear(0,0,0,1.0);
 	getSharedRenderTarget().end();
 	
 //	//hack to fix bg color state leak
@@ -2665,7 +2665,7 @@ void CloudsVisualSystem::drawBackground()
 	ofSetGlobalAmbientColor(ofColor(0,0,0));
 
 //	cout << ofGetFrameNum() <<  "Drawing background for system " << getSystemName() << " " << bgColor->r << " " << bgColor->g << " " << bgColor->b << endl;
-	cout << ofGetFrameNum() <<  "Drawing background for system " << getSystemName() << " " << bgColor.r/255. << " " << bgColor.g/255. << " " << bgColor.b/255. << endl;
+//	cout << ofGetFrameNum() <<  "Drawing background for system " << getSystemName() << " " << bgColor.r/255. << " " << bgColor.g/255. << " " << bgColor.b/255. << endl;
 
 	
     if(bClearBackground)
