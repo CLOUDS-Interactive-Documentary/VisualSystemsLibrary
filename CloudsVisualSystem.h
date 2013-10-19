@@ -60,6 +60,7 @@ class CloudsVisualSystem {
 #endif
 	ofFbo& getSharedRenderTarget();
 	ofImage& getCursor();
+
 	
 	//SUB CLASSES USE THESE METHODS:
     virtual void selfSetup();

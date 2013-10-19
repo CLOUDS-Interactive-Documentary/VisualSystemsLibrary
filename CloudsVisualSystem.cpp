@@ -115,7 +115,6 @@ CloudsVisualSystem::CloudsVisualSystem(){
 	pointcloudScale = .25;
 	confirmedDataPath = false;
 	bBarGradient = false;
-	
 	//hardcoded for now
 #ifdef OCULUS_RIFT
 	bUseOculusRift = true;
@@ -350,6 +349,8 @@ void CloudsVisualSystem::update(ofEventArgs & args)
 		timeline->setOffset(ofVec2f(4, ofGetHeight() - timeline->getHeight() - 4 ));
 		timeline->setWidth(ofGetWidth() - 8);
 	}
+	
+	
 }
 
 void CloudsVisualSystem::draw(ofEventArgs & args)
@@ -2660,7 +2661,11 @@ void CloudsVisualSystem::drawBackground()
 	ofEnableAlphaBlending();
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
-	
+	ofSetGlobalAmbientColor(ofColor(0,0,0));
+
+//	cout << ofGetFrameNum() <<  "Drawing background for system " << getSystemName() << " " << bgColor->r << " " << bgColor->g << " " << bgColor->b << endl;
+//	cout << ofGetFrameNum() <<  "Drawing background for system " << getSystemName() << " " << bgColor->r << " " << bgColor->g << " " << bgColor->b << endl;
+
 	if(bMatchBackgrounds){
 		bgHue2->setHome(bgHue->getPos());
 		bgSat2->setHome(bgSat->getPos());
@@ -2709,7 +2714,6 @@ void CloudsVisualSystem::drawBackground()
 					ofBackgroundGradient(*bgColor, *bgColor2, OF_GRADIENT_CIRCULAR);
 				}
 			}
-			
 		}
 		else{
 			ofSetSmoothLighting(false);
