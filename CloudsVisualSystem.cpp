@@ -333,8 +333,8 @@ void CloudsVisualSystem::update(ofEventArgs & args)
         {
             (*it)->update();
         }
-        bgColor->setHsb(bgHue->getPos(), bgSat->getPos(), bgBri->getPos(), 255);
-        bgColor2->setHsb(bgHue2->getPos(), bgSat2->getPos(), bgBri2->getPos(), 255);
+        bgColor->setHsb(bgHue, bgSat, bgBri, 255);
+        bgColor2->setHsb(bgHue2, bgSat2, bgBri2, 255);
 		
 		//update camera
 		translatedHeadPosition = getRGBDVideoPlayer().headPosition * pointcloudScale + ofVec3f(0,0,pointcloudOffsetZ);
@@ -994,40 +994,40 @@ void CloudsVisualSystem::setupRenderGui()
 
 void CloudsVisualSystem::setupBackgroundGui()
 {
-    bgHue = new ofx1DExtruder(0);
-	bgSat = new ofx1DExtruder(0);
-	bgBri = new ofx1DExtruder(0);
+//    bgHue = new ofx1DExtruder(0);
+//	bgSat = new ofx1DExtruder(0);
+//	bgBri = new ofx1DExtruder(0);
 	
-	bgHue->setPhysics(.95, 5.0, 25.0);
-	bgSat->setPhysics(.95, 5.0, 25.0);
-	bgBri->setPhysics(.95, 5.0, 25.0);
+//	bgHue->setPhysics(.95, 5.0, 25.0);
+//	bgSat->setPhysics(.95, 5.0, 25.0);
+//	bgBri->setPhysics(.95, 5.0, 25.0);
 	
-    bgHue2 = new ofx1DExtruder(0);
-	bgSat2 = new ofx1DExtruder(0);
-	bgBri2 = new ofx1DExtruder(0);
+//    bgHue2 = new ofx1DExtruder(0);
+//	bgSat2 = new ofx1DExtruder(0);
+//	bgBri2 = new ofx1DExtruder(0);
 	
-	bgHue2->setPhysics(.95, 5.0, 25.0);
-	bgSat2->setPhysics(.95, 5.0, 25.0);
-	bgBri2->setPhysics(.95, 5.0, 25.0);
+//	bgHue2->setPhysics(.95, 5.0, 25.0);
+//	bgSat2->setPhysics(.95, 5.0, 25.0);
+//	bgBri2->setPhysics(.95, 5.0, 25.0);
     
 	gradientMode = 0;
-    bgHue->setHome((330.0/360.0)*255.0);
-	bgSat->setHome(0);
-	bgBri->setHome(0);
+//    bgHue->setHome((330.0/360.0)*255.0);
+//	bgSat->setHome(0);
+//	bgBri->setHome(0);
     bgColor = new ofColor(0,0,0);
     
-    bgHue2->setHome((330.0/360.0)*255.0);
-	bgSat2->setHome(0);
-	bgBri2->setHome(0);
+//    bgHue2->setHome((330.0/360.0)*255.0);
+//	bgSat2->setHome(0);
+//	bgBri2->setHome(0);
 	bgColor2 = new ofColor(0,0,0);
     
-    extruders.push_back(bgHue);
-    extruders.push_back(bgSat);
-    extruders.push_back(bgBri);
-    
-    extruders.push_back(bgHue2);
-    extruders.push_back(bgSat2);
-    extruders.push_back(bgBri2);
+//    extruders.push_back(bgHue);
+//    extruders.push_back(bgSat);
+//    extruders.push_back(bgBri);
+//    
+//    extruders.push_back(bgHue2);
+//    extruders.push_back(bgSat2);
+//    extruders.push_back(bgBri2);
     
     bgGui = new ofxUISuperCanvas("BACKGROUND", gui);
     bgGui->copyCanvasStyle(gui);
@@ -1044,14 +1044,14 @@ void CloudsVisualSystem::setupBackgroundGui()
 	bgGui->addToggle("BAR GRAD", &bBarGradient);
     bgGui->addSpacer();
 
-    bgGui->addSlider("HUE", 0.0, 255.0, bgHue->getPosPtr());
-    bgGui->addSlider("SAT", 0.0, 255.0, bgSat->getPosPtr());
-    bgGui->addSlider("BRI", 0.0, 255.0, bgBri->getPosPtr());
+    bgGui->addSlider("HUE", 0.0, 255.0, &bgHue);
+    bgGui->addSlider("SAT", 0.0, 255.0, &bgSat);
+    bgGui->addSlider("BRI", 0.0, 255.0, &bgBri);
     bgGui->addSpacer();
 	bgGui->addButton("MATCH", &bMatchBackgrounds);
-    hueSlider = bgGui->addSlider("HUE2", 0.0, 255.0, bgHue2->getPosPtr());
-    satSlider = bgGui->addSlider("SAT2", 0.0, 255.0, bgSat2->getPosPtr());
-    briSlider = bgGui->addSlider("BRI2", 0.0, 255.0, bgBri2->getPosPtr());
+    hueSlider = bgGui->addSlider("HUE2", 0.0, 255.0, &bgHue2);
+    satSlider = bgGui->addSlider("SAT2", 0.0, 255.0, &bgSat2);
+    briSlider = bgGui->addSlider("BRI2", 0.0, 255.0, &bgBri2);
     bgGui->autoSizeToFitWidgets();
     ofAddListener(bgGui->newGUIEvent, this, &CloudsVisualSystem::guiBackgroundEvent);
     guis.push_back(bgGui);
@@ -1064,33 +1064,33 @@ void CloudsVisualSystem::guiBackgroundEvent(ofxUIEventArgs &e)
     
     if(name == "BRI")
     {
-        bgBri->setPosAndHome(bgBri->getPos());
+       // bgBri->setPosAndHome(bgBri->getPos());
         for(int i = 0; i < guis.size(); i++)
         {
-            guis[i]->setWidgetColor(OFX_UI_WIDGET_COLOR_BACK, ofColor(bgBri->getPos(),OFX_UI_COLOR_BACK_ALPHA*REZANATOR_GUI_ALPHA_MULTIPLIER));
-            guis[i]->setColorBack(ofColor(255-bgBri->getPos(), OFX_UI_COLOR_BACK_ALPHA*REZANATOR_GUI_ALPHA_MULTIPLIER));
+            guis[i]->setWidgetColor(OFX_UI_WIDGET_COLOR_BACK, ofColor(bgBri,OFX_UI_COLOR_BACK_ALPHA*REZANATOR_GUI_ALPHA_MULTIPLIER));
+            guis[i]->setColorBack(ofColor(255 - bgBri, OFX_UI_COLOR_BACK_ALPHA*REZANATOR_GUI_ALPHA_MULTIPLIER));
         }
     }
-    else if(name == "SAT")
-    {
-        bgSat->setPosAndHome(bgSat->getPos());
-    }
-    else if(name == "HUE")
-    {
-        bgHue->setPosAndHome(bgHue->getPos());
-    }
-    else if(name == "BRI2")
-    {
-        bgBri2->setPosAndHome(bgBri2->getPos());
-    }
-    else if(name == "SAT2")
-    {
-        bgSat2->setPosAndHome(bgSat2->getPos());
-    }
-    else if(name == "HUE2")
-    {
-        bgHue2->setPosAndHome(bgHue2->getPos());
-    }
+//    else if(name == "SAT")
+//    {
+//        bgSat->setPosAndHome(bgSat->getPos());
+//    }
+//    else if(name == "HUE")
+//    {
+//        bgHue->setPosAndHome(bgHue->getPos());
+//    }
+//    else if(name == "BRI2")
+//    {
+//        bgBri2->setPosAndHome(bgBri2->getPos());
+//    }
+//    else if(name == "SAT2")
+//    {
+//        bgSat2->setPosAndHome(bgSat2->getPos());
+//    }
+//    else if(name == "HUE2")
+//    {
+//        bgHue2->setPosAndHome(bgHue2->getPos());
+//    }
     else if(name == "GRAD")
     {
         ofxUIToggle *t = (ofxUIToggle *) e.widget;
@@ -2419,9 +2419,9 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 	ofClear(0,0,0,0);
 	getSharedRenderTarget().end();
 	
-	//hack to fix bg color state leak
-	bgColor->setHsb(bgHue->getPos(), bgSat->getPos(), bgBri->getPos(), 255);
-	bgColor2->setHsb(bgHue2->getPos(), bgSat2->getPos(), bgBri2->getPos(), 255);
+//	//hack to fix bg color state leak
+//	bgColor->setHsb(bgHue->getPos(), bgSat->getPos(), bgBri->getPos(), 255);
+//	bgColor2->setHsb(bgHue2->getPos(), bgSat2->getPos(), bgBri2->getPos(), 255);
 	
 	//auto play this preset
 	cameraTrack->lockCameraToTrack = cameraTrack->getKeyframes().size() > 0;
@@ -2568,7 +2568,7 @@ void CloudsVisualSystem::drawDebug()
     if(bDebug)
     {
 		ofPushStyle();
-        float color = 255-bgBri->getPos();
+        float color = 255-bgBri;
         ofEnableBlendMode(OF_BLENDMODE_ALPHA);
         drawGrid(-debugGridSize,-debugGridSize,debugGridSize*2,debugGridSize*2, color);
         drawAxis(debugGridSize, color);
@@ -2667,9 +2667,9 @@ void CloudsVisualSystem::drawBackground()
 //	cout << ofGetFrameNum() <<  "Drawing background for system " << getSystemName() << " " << bgColor->r << " " << bgColor->g << " " << bgColor->b << endl;
 
 	if(bMatchBackgrounds){
-		bgHue2->setHome(bgHue->getPos());
-		bgSat2->setHome(bgSat->getPos());
-		bgBri2->setHome(bgBri->getPos());
+		bgHue2 = bgHue;
+		bgSat2 = bgSat;
+		bgBri2 = bgBri;
 	}
 	
     if(bClearBackground)

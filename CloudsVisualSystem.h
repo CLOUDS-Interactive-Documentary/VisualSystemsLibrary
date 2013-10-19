@@ -286,17 +286,26 @@ class CloudsVisualSystem {
 	bool bBarGradient;
     int gradientMode;
 	ofColor *bgColor;
-	ofx1DExtruder *bgHue;
-	ofx1DExtruder *bgSat;
-	ofx1DExtruder *bgBri;
+
+	float bgHue;
+	float bgSat;
+	float bgBri;
+	float bgHue2;
+	float bgSat2;
+	float bgBri2;
+
+//	ofx1DExtruder *bgHue;
+//	ofx1DExtruder *bgSat;
+//	ofx1DExtruder *bgBri;
 	ofColor *bgColor2;
-	ofx1DExtruder *bgHue2;
-	ofx1DExtruder *bgSat2;
-	ofx1DExtruder *bgBri2;
+//	ofx1DExtruder *bgHue2;
+//	ofx1DExtruder *bgSat2;
+//	ofx1DExtruder *bgBri2;
     
     ofxUISlider *hueSlider;
     ofxUISlider *satSlider;
     ofxUISlider *briSlider;
+	
 	ofxUIRadio *presetRadio;
 	ofxUIRadio *transitionRadio;
 	
