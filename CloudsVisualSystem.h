@@ -51,6 +51,23 @@ class CloudsVisualSystem {
 	  RGBD = 3
 	};
 	
+	
+	static string getVisualSystemDataPath(string systemName){
+		//  building from src project file
+		string datapath;
+		if(ofDirectory("../../../CloudsLibrary/").exists()){
+			datapath = "../../../CloudsLibrary/src/VisualSystems/"+ systemName + "/bin/data/";
+		}
+		//  stand alone full app
+		else if(ofDirectory("CloudsData/").exists()){
+			datapath =  "CloudsData/VisualSystems/"+ systemName + "/";
+		}
+		else{
+			datapath =  "../../../data/";
+		}
+		return datapath;
+	}
+	
 	static ofFbo& getStaticRenderTarget(); //default
 	static void loadBackgroundShader();
 	static CloudsRGBDVideoPlayer& getRGBDVideoPlayer();
@@ -60,6 +77,7 @@ class CloudsVisualSystem {
 #endif
 	ofFbo& getSharedRenderTarget();
 	ofImage& getCursor();
+
 	
 	//SUB CLASSES USE THESE METHODS:
     virtual void selfSetup();
@@ -285,17 +303,26 @@ class CloudsVisualSystem {
 	bool bBarGradient;
     int gradientMode;
 	ofColor *bgColor;
-	ofx1DExtruder *bgHue;
-	ofx1DExtruder *bgSat;
-	ofx1DExtruder *bgBri;
+
+	float bgHue;
+	float bgSat;
+	float bgBri;
+	float bgHue2;
+	float bgSat2;
+	float bgBri2;
+
+//	ofx1DExtruder *bgHue;
+//	ofx1DExtruder *bgSat;
+//	ofx1DExtruder *bgBri;
 	ofColor *bgColor2;
-	ofx1DExtruder *bgHue2;
-	ofx1DExtruder *bgSat2;
-	ofx1DExtruder *bgBri2;
+//	ofx1DExtruder *bgHue2;
+//	ofx1DExtruder *bgSat2;
+//	ofx1DExtruder *bgBri2;
     
     ofxUISlider *hueSlider;
     ofxUISlider *satSlider;
     ofxUISlider *briSlider;
+	
 	ofxUIRadio *presetRadio;
 	ofxUIRadio *transitionRadio;
 	
