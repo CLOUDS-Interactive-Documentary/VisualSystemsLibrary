@@ -2418,9 +2418,18 @@ void CloudsVisualSystem::loadPresetGUISFromPath(string presetPath)
 	ofClear(0,0,0,0);
 	getSharedRenderTarget().end();
 	
+	//hack to fix bg color state leak
+	bgColor->setHsb(bgHue->getPos(), bgSat->getPos(), bgBri->getPos(), 255);
+	bgColor2->setHsb(bgHue2->getPos(), bgSat2->getPos(), bgBri2->getPos(), 255);
+	
 	//auto play this preset
 	cameraTrack->lockCameraToTrack = cameraTrack->getKeyframes().size() > 0;
-	timeline->setCurrentTimeMillis(0);
+	if(cameraTrack->lockCameraToTrack){
+		timeline->setCurrentTimeMillis(cameraTrack->getKeyframes()[0]->time);
+	}
+	else {
+		timeline->setCurrentTimeMillis(0);
+	}
 	timeline->play();
 	bEnableTimeline = true;
 }
