@@ -324,17 +324,25 @@ void CloudsVisualSystem::update(ofEventArgs & args)
         {
             (*it)->update();
         }
-        bgColor = ofColor::fromHsb(MIN(bgHue,254.), bgSat, bgBri, 255);
-        bgColor2 = ofColor::fromHsb(MIN(bgHue2  ,254.), bgSat2, bgBri2, 255);
-//		cout << "color 1 " << int(bgColor.r) << " " << int(bgColor.g) << " " << int(bgColor.b) << endl;
-//        cout << "color 2 " << int(bgColor2.r) << " " << int(bgColor2.g) << " " << int(bgColor2.b) << endl;
         
+		
 		//update camera
 		translatedHeadPosition = getRGBDVideoPlayer().headPosition * pointcloudScale + ofVec3f(0,0,pointcloudOffsetZ);
 		cloudsCamera.lookTarget = translatedHeadPosition;
 		
         selfUpdate();
     }
+	
+	if(bMatchBackgrounds){
+		bgHue2 = bgHue;
+		bgSat2 = bgSat;
+		bgBri2 = bgBri;
+	}
+	
+	bgColor = ofColor::fromHsb(MIN(bgHue,254.), bgSat, bgBri, 255);
+	bgColor2 = ofColor::fromHsb(MIN(bgHue2,254.), bgSat2, bgBri2, 255);
+	cout << "color 1 " << int(bgColor.r) << " " << int(bgColor.g) << " " << int(bgColor.b) << endl;
+	cout << "color 2 " << int(bgColor2.r) << " " << int(bgColor2.g) << " " << int(bgColor2.b) << endl;
 	
 	//Make this happen only when the timeline is modified by the user or when a new track is added.
 	if(!ofGetMousePressed())
@@ -2657,13 +2665,8 @@ void CloudsVisualSystem::drawBackground()
 	ofSetGlobalAmbientColor(ofColor(0,0,0));
 
 //	cout << ofGetFrameNum() <<  "Drawing background for system " << getSystemName() << " " << bgColor->r << " " << bgColor->g << " " << bgColor->b << endl;
-//	cout << ofGetFrameNum() <<  "Drawing background for system " << getSystemName() << " " << bgColor->r << " " << bgColor->g << " " << bgColor->b << endl;
+	cout << ofGetFrameNum() <<  "Drawing background for system " << getSystemName() << " " << bgColor.r/255. << " " << bgColor.g/255. << " " << bgColor.b/255. << endl;
 
-	if(bMatchBackgrounds){
-		bgHue2 = bgHue;
-		bgSat2 = bgSat;
-		bgBri2 = bgBri;
-	}
 	
     if(bClearBackground)
 	{
@@ -2704,6 +2707,7 @@ void CloudsVisualSystem::drawBackground()
 				}
 				else{
 					ofSetSmoothLighting(true);
+
 					ofBackgroundGradient(bgColor, bgColor2, OF_GRADIENT_CIRCULAR);
 				}
 			}
