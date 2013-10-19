@@ -21,6 +21,7 @@ CloudsRGBDCamera::CloudsRGBDCamera(){
 	dropAmount = 33;
 	isSetup = false;
 	damp = .1;
+	driftNoisePosition = 0;
 	
 	maxDriftAngle = 0;
 //	driftNoiseDensity = 0;
@@ -100,8 +101,9 @@ void CloudsRGBDCamera::setPositionFromMouse(){
 		ofVec3f toCamera = currentPosition - currentLookTarget;
 		ofQuaternion driftQuatX,driftQuatY;
 		
-		float driftX = ofSignedNoise(channelA, driftNoiseSpeed * ofGetElapsedTimef());
-		float driftY = ofSignedNoise(channelB, driftNoiseSpeed * ofGetElapsedTimef());
+		driftNoisePosition += driftNoiseSpeed;// * (ofGetElapsedTimef() - ofGetLastFrameTime());
+		float driftX = ofSignedNoise( channelA, driftNoisePosition );
+		float driftY = ofSignedNoise( channelB, driftNoisePosition );
 		
 		driftPosition.rotate(driftX*maxDriftAngle, currentLookTarget, ofVec3f(0,1,0));
 		driftPosition.rotate(driftY*maxDriftAngle, currentLookTarget, ofVec3f(1,0,0));
