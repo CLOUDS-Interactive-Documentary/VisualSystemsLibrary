@@ -46,7 +46,8 @@ class CloudsRGBDCamera : public ofCamera {
 	float maxDriftAngle;
 	float driftNoiseDensity;
 	float driftNoiseSpeed;
-
+	float driftNoisePosition;
+	
   protected:
 	ofVec3f currentPosition;
 	ofVec3f currentLookTarget;
