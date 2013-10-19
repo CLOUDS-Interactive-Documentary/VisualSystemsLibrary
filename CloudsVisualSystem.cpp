@@ -148,17 +148,7 @@ ofFbo& CloudsVisualSystem::getSharedRenderTarget(){
 string CloudsVisualSystem::getVisualSystemDataPath(){
 
 	if(!confirmedDataPath){
-		//  building from src project file
-		if(ofDirectory("../../../CloudsLibrary/").exists()){
-			cachedDataPath = "../../../CloudsLibrary/src/VisualSystems/"+ getSystemName() +"/bin/data/";
-		}
-		//  stand alone full app
-		else if(ofDirectory("CloudsData/").exists()){
-			cachedDataPath =  "CloudsData/VisualSystems/"+ getSystemName() + "/";
-		}
-		else{
-			cachedDataPath =  "../../../data/";
-		}
+		cachedDataPath = CloudsVisualSystem::getVisualSystemDataPath(getSystemName());
 		confirmedDataPath = true;
 	}
 	return cachedDataPath;
@@ -2468,7 +2458,7 @@ void CloudsVisualSystem::savePresetGUIS(string presetName)
 	timeInfo.addValue("introDuration", getIntroDuration());
 	timeInfo.addValue("outroDuration", getOutroDuration());
 	timeInfo.popTag();//timeinfo
-	timeInfo.saveFile(getVisualSystemDataPath()+"Presets/"+presetName+"/"+"TimeInfo.xml");
+	timeInfo.saveFile(getVisualSystemDataPath()+"Presets/"+presetName+"/TimeInfo.xml");
 	
 }
 

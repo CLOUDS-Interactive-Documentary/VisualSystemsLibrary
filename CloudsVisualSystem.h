@@ -51,6 +51,23 @@ class CloudsVisualSystem {
 	  RGBD = 3
 	};
 	
+	
+	static string getVisualSystemDataPath(string systemName){
+		//  building from src project file
+		string datapath;
+		if(ofDirectory("../../../CloudsLibrary/").exists()){
+			datapath = "../../../CloudsLibrary/src/VisualSystems/"+ systemName + "/bin/data/";
+		}
+		//  stand alone full app
+		else if(ofDirectory("CloudsData/").exists()){
+			datapath =  "CloudsData/VisualSystems/"+ systemName + "/";
+		}
+		else{
+			datapath =  "../../../data/";
+		}
+		return datapath;
+	}
+	
 	static ofFbo& getStaticRenderTarget(); //default
 	static void loadBackgroundShader();
 	static CloudsRGBDVideoPlayer& getRGBDVideoPlayer();
