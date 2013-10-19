@@ -115,6 +115,7 @@ CloudsVisualSystem::CloudsVisualSystem(){
 	pointcloudScale = .25;
 	confirmedDataPath = false;
 	bBarGradient = false;
+    bMatchBackgrounds = false;
 	//hardcoded for now
 #ifdef OCULUS_RIFT
 	bUseOculusRift = true;
@@ -323,9 +324,11 @@ void CloudsVisualSystem::update(ofEventArgs & args)
         {
             (*it)->update();
         }
-        bgColor->setHsb(bgHue, bgSat, bgBri, 255);
-        bgColor2->setHsb(bgHue2, bgSat2, bgBri2, 255);
-		
+        bgColor = ofColor::fromHsb(MIN(bgHue,254.), bgSat, bgBri, 255);
+        bgColor2 = ofColor::fromHsb(MIN(bgHue2  ,254.), bgSat2, bgBri2, 255);
+//		cout << "color 1 " << int(bgColor.r) << " " << int(bgColor.g) << " " << int(bgColor.b) << endl;
+//        cout << "color 2 " << int(bgColor2.r) << " " << int(bgColor2.g) << " " << int(bgColor2.b) << endl;
+        
 		//update camera
 		translatedHeadPosition = getRGBDVideoPlayer().headPosition * pointcloudScale + ofVec3f(0,0,pointcloudOffsetZ);
 		cloudsCamera.lookTarget = translatedHeadPosition;
@@ -453,8 +456,8 @@ void CloudsVisualSystem::setupRGBDTransforms(){
 void CloudsVisualSystem::exit(ofEventArgs & args)
 {
 //    delete colorPalletes;
-    delete bgColor;
-    delete bgColor2;
+//    delete bgColor;
+//    delete bgColor2;
     
     saveGUIS();
     
@@ -1004,12 +1007,12 @@ void CloudsVisualSystem::setupBackgroundGui()
 //    bgHue->setHome((330.0/360.0)*255.0);
 //	bgSat->setHome(0);
 //	bgBri->setHome(0);
-    bgColor = new ofColor(0,0,0);
+//    bgColor = new ofColor(0,0,0);
     
 //    bgHue2->setHome((330.0/360.0)*255.0);
 //	bgSat2->setHome(0);
 //	bgBri2->setHome(0);
-	bgColor2 = new ofColor(0,0,0);
+//	bgColor2 = new ofColor(0,0,0);
     
 //    extruders.push_back(bgHue);
 //    extruders.push_back(bgSat);
@@ -2676,8 +2679,8 @@ void CloudsVisualSystem::drawBackground()
 //					cout << "shader" << endl;
 					backgroundShader.begin();
 					backgroundShader.setUniformTexture("image", backgroundGradientBar, 0);
-					backgroundShader.setUniform3f("colorOne", bgColor->r/255., bgColor->g/255., bgColor->b/255.);
-					backgroundShader.setUniform3f("colorTwo", bgColor2->r/255., bgColor2->g/255., bgColor2->b/255.);
+					backgroundShader.setUniform3f("colorOne", bgColor.r/255., bgColor.g/255., bgColor.b/255.);
+					backgroundShader.setUniform3f("colorTwo", bgColor2.r/255., bgColor2.g/255., bgColor2.b/255.);
 					ofMesh mesh;
 					getBackgroundMesh(mesh, backgroundGradientCircle, ofGetWidth(), ofGetHeight());
 					mesh.draw();
@@ -2685,15 +2688,15 @@ void CloudsVisualSystem::drawBackground()
 				}
 				else{
 					ofSetSmoothLighting(true);
-					ofBackgroundGradient(*bgColor, *bgColor2, OF_GRADIENT_BAR);
+					ofBackgroundGradient(bgColor, bgColor2, OF_GRADIENT_BAR);
 				}
 			}
 			else{
 				if(backgroundGradientCircle.isAllocated()){
 					backgroundShader.begin();
 					backgroundShader.setUniformTexture("image", backgroundGradientCircle, 0);
-					backgroundShader.setUniform3f("colorOne", bgColor->r/255., bgColor->g/255., bgColor->b/255.);
-					backgroundShader.setUniform3f("colorTwo", bgColor2->r/255., bgColor2->g/255., bgColor2->b/255.);
+					backgroundShader.setUniform3f("colorOne", bgColor.r/255., bgColor.g/255., bgColor.b/255.);
+					backgroundShader.setUniform3f("colorTwo", bgColor2.r/255., bgColor2.g/255., bgColor2.b/255.);
 					ofMesh mesh;
 					getBackgroundMesh(mesh, backgroundGradientCircle, ofGetWidth(), ofGetHeight());
 					mesh.draw();
@@ -2701,13 +2704,13 @@ void CloudsVisualSystem::drawBackground()
 				}
 				else{
 					ofSetSmoothLighting(true);
-					ofBackgroundGradient(*bgColor, *bgColor2, OF_GRADIENT_CIRCULAR);
+					ofBackgroundGradient(bgColor, bgColor2, OF_GRADIENT_CIRCULAR);
 				}
 			}
 		}
 		else{
 			ofSetSmoothLighting(false);
-			ofBackground(*bgColor);
+			ofBackground(bgColor);
 		}
 	}
 

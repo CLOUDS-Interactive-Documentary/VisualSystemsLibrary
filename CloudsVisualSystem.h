@@ -302,7 +302,8 @@ class CloudsVisualSystem {
     float bgAspectRatio;
 	bool bBarGradient;
     int gradientMode;
-	ofColor *bgColor;
+	ofColor bgColor;
+	ofColor bgColor2;
 
 	float bgHue;
 	float bgSat;
@@ -314,7 +315,6 @@ class CloudsVisualSystem {
 //	ofx1DExtruder *bgHue;
 //	ofx1DExtruder *bgSat;
 //	ofx1DExtruder *bgBri;
-	ofColor *bgColor2;
 //	ofx1DExtruder *bgHue2;
 //	ofx1DExtruder *bgSat2;
 //	ofx1DExtruder *bgBri2;
